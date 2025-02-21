@@ -1,0 +1,18 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+.env
+
+# Database
+db.sqlite3
+
+# Django Secret Key
+*.pem
+
+# Docker
+*.log
+docker-compose.override.yml
