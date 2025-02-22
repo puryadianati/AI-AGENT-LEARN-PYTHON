@@ -20,4 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('myapp.urls')),  # 👈 این خط را اضافه کنید
+    path('api/', include('myapp.urls')),  # اضافه کردن API های سرفصل‌ها، درس‌ها و چالش‌ها
+
 ]

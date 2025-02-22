@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Course Lessons</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        .lesson-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); }
+        .glass { background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .progress-bar { transition: width 0.5s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-blue-50 to-purple-50 min-h-screen flex flex-col justify-center items-center">
+
+    <main class="max-w-6xl w-full py-10 px-6">
+
+         
+
+        <div class="mb-12 text-center fade-in">
+            <h1 class="text-5xl font-extrabold text-gray-800 mb-4">Master Python from Scratch 🚀</h1>
+            <p class="text-lg text-gray-600">Interactive lessons with real-world projects</p>
+        </div>
+
+        <div id="lesson-container">
+            {% for level, lessons in lesson_data.items %}
+                {% if lessons %}
+                    <div class="glass rounded-2xl shadow-xl p-6 mb-8 fade-in">
+                        <div class="flex items-center mb-6">
+                            {% if level == 'beginner' %}
+                                <div class="w-12 h-12 bg-green-500 text-white rounded-lg flex items-center justify-center shadow-lg text-2xl">🐣</div>
+                                <h2 class="mr-4 text-2xl font-bold text-gray-800">Beginner Level</h2>
+                            {% elif level == 'intermediate' %}
+                                <div class="w-12 h-12 bg-yellow-500 text-white rounded-lg flex items-center justify-center shadow-lg text-2xl">🚀</div>
+                                <h2 class="mr-4 text-2xl font-bold text-gray-800">Intermediate Level</h2>
+                            {% else %}
+                                <div class="w-12 h-12 bg-red-500 text-white rounded-lg flex items-center justify-center shadow-lg text-2xl">🔥</div>
+                                <h2 class="mr-4 text-2xl font-bold text-gray-800">Advanced Level</h2>
+                            {% endif %}
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            {% for lesson in lessons %}
+                                <a href="#" class="lesson-card group flex items-center justify-between p-6 bg-white hover:bg-gray-100 rounded-xl transition-all duration-300 border border-transparent hover:border-blue-300 transform-gpu shadow-md">
+                                    <div class="space-y-1">
+                                        <h3 class="font-medium text-gray-800 text-lg">{{ lesson.title }}</h3>
+                                        <p class="text-sm text-gray-500">{{ lesson.description }}</p>
+                                    </div>
+                                    <button class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-md hover:scale-105 transition-all">Start</button>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+    </main>
+
+    <script>
+        const progressBar = document.getElementById("progress-bar");
+        let completedLessons = 7;  // مقدار واقعی در آینده از دیتابیس گرفته شود
+        let totalLessons = {{ lesson_data.beginner|length }} + {{ lesson_data.intermediate|length }} + {{ lesson_data.advanced|length }};
+        let progressPercentage = (completedLessons / totalLessons) * 100;
+        progressBar.style.width = `${progressPercentage}%`;
+    </script>
+
+</body>
+</html>
