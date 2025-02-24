@@ -17,8 +17,6 @@
 
     <main class="max-w-6xl w-full py-10 px-6">
 
-         
-
         <div class="mb-12 text-center fade-in">
             <h1 class="text-5xl font-extrabold text-gray-800 mb-4">Master Python from Scratch 🚀</h1>
             <p class="text-lg text-gray-600">Interactive lessons with real-world projects</p>
@@ -43,13 +41,15 @@
 
                         <div class="grid md:grid-cols-2 gap-4">
                             {% for lesson in lessons %}
-                                <a href="#" class="lesson-card group flex items-center justify-between p-6 bg-white hover:bg-gray-100 rounded-xl transition-all duration-300 border border-transparent hover:border-blue-300 transform-gpu shadow-md">
-                                    <div class="space-y-1">
-                                        <h3 class="font-medium text-gray-800 text-lg">{{ lesson.title }}</h3>
-                                        <p class="text-sm text-gray-500">{{ lesson.description }}</p>
-                                    </div>
-                                    <button class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-md hover:scale-105 transition-all">Start</button>
-                                </a>
+                            <a href="{% url 'lesson_challenge_detail' lesson.id 0 %}" class="lesson-card group flex items-center justify-between p-6 bg-white hover:bg-gray-100 rounded-xl transition-all duration-300 border border-transparent hover:border-blue-300 transform-gpu shadow-md">
+                                <div class="space-y-1">
+                                    <h3 class="font-medium text-gray-800 text-lg">{{ lesson.title }}</h3>
+                                    <p class="text-sm text-gray-500">{{ lesson.description }}</p>
+                                </div>
+                                <button class="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-md hover:scale-105 transition-all">
+                                    Start
+                                </button>
+                            </a>
                             {% endfor %}
                         </div>
                     </div>

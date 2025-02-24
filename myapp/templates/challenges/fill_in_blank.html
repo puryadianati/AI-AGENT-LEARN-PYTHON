@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fill in the Blank Challenge - Asyncio Event Loop</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet" />
+
+  <!-- Highlight.js CSS و JS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/monokai-sublime.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  
+  <style>
+    .neon-border {
+      box-shadow: 0 0 15px rgba(255,94,148,0.5);
+    }
+    .code-editor {
+      background: #2d2d2d;
+      border-radius: 8px;
+      box-shadow: inset 0 4px 12px rgba(0,0,0,0.3);
+      padding: 1rem;
+      position: relative;
+    }
+    code[contenteditable="true"] {
+      outline: none;
+      white-space: pre-wrap;
+      word-wrap: break-word; 
+    }
+    .blank {
+      border: none;
+      border-bottom: 2px dashed #fff;
+      min-width: 200px;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 0.875rem;
+      text-align: center;
+      color: #ffcb6b;
+      background: transparent;
+      outline: none;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-100vh); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+    #result {
+      overflow: visible !important;
+      white-space: pre-wrap;
+    }
+    .animate-shake {
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+    .hidden {
+      display: none;
+    }
+    
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+      .container {
+        margin: 1rem;
+        padding: 1.5rem;
+        max-width: 95%;
+      }
+      #challenge-title {
+        font-size: 1.5rem;
+      }
+      .code-editor {
+        font-size: 0.75rem;
+      }
+      #options {
+        grid-template-columns: 1fr;
+      }
+      .blank {
+        min-width: 150px;
+      }
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
+  <div class="container bg-white/90 rounded-2xl p-8 shadow-2xl neon-border max-w-3xl mx-4 sm:mx-auto">
+    <div class="text-center mb-6">
+      <h1 id="challenge-title" class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+        Fill in the Blank Challenge - Asyncio Event Loop
+      </h1>
+      <p id="challenge-question" class="text-gray-600 font-medium"></p>
+    </div>
+
+    <div class="code-editor mb-6">
+      <pre class="font-mono text-sm text-white bg-transparent rounded-md">
+        <code 
+          id="code-content" 
+          class="language-python w-full h-auto"
+          contenteditable="true"
+          spellcheck="false"
+        ></code>
+      </pre>
+    </div>
+    
+    <div id="options" class="grid grid-cols-2 gap-4 mb-6"></div>
+    
+    <button id="check-btn" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-95">
+      Check Answer
+    </button>
+    <button id="next-btn" class="hidden w-full bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-95 mt-4">
+      Next Challenge ➔
+    </button>
+    <p id="result" class="mt-4 text-center text-xl font-semibold"></p>
+  </div>
+
+  <script>
+    const challenge = JSON.parse('{{ challenge_json|escapejs }}');
+
+    const codeBlock = document.getElementById("code-content");
+    const optionsContainer = document.getElementById("options");
+    const resultEl = document.getElementById("result");
+    let originalSnippet = challenge.code_snippet.replace(/\\n/g, '\n');
+
+    function renderChallenge() {
+      document.getElementById('challenge-question').textContent = challenge.question;
+      originalSnippet = challenge.code_snippet.replace(/\\n/g, '\n');
+      codeBlock.textContent = originalSnippet;
+      hljs.highlightElement(codeBlock);
+
+      optionsContainer.innerHTML = "";
+      challenge.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.className = "option-btn bg-gradient-to-br from-blue-400 to-cyan-400 hover:from-blue-500 hover:to-cyan-500 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition-transform hover:scale-105";
+        btn.addEventListener("click", () => selectOption(option));
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function selectOption(option) {
+      let updatedCode = originalSnippet.replace("# Your code here", option);
+      codeBlock.textContent = updatedCode;
+      hljs.highlightElement(codeBlock);
+    }
+
+    codeBlock.addEventListener("input", () => {
+      const newText = codeBlock.innerText;
+      codeBlock.textContent = newText;
+      hljs.highlightElement(codeBlock);
+    });
+
+    function checkAnswer() {
+      const codeText = codeBlock.textContent;
+      if (codeText.includes(challenge.correct_answer.trim())) {
+        resultEl.textContent = "🎉 Correct! Well done! 💯";
+        resultEl.style.color = "#22c55e";
+        resultEl.classList.add("animate-bounce");
+
+        // Show next button
+        document.getElementById('check-btn').classList.add('hidden');
+        document.getElementById('next-btn').classList.remove('hidden');
+
+        // Confetti effect
+        for (let i = 0; i < 50; i++) {
+          const confetti = document.createElement("div");
+          confetti.className = "absolute w-2 h-2 bg-yellow-400 rounded-full";
+          confetti.style.left = Math.random() * 100 + "%";
+          confetti.style.top = Math.random() * 100 + "%";
+          confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear`;
+          document.body.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 5000);
+        }
+      } else {
+        resultEl.textContent = "😖 Oops! Try again! 💪";
+        resultEl.style.color = "#ef4444";
+        resultEl.classList.add("animate-shake");
+        setTimeout(() => resultEl.classList.remove("animate-shake"), 800);
+        
+        // Ensure next button is hidden
+        document.getElementById('next-btn').classList.add('hidden');
+        document.getElementById('check-btn').classList.remove('hidden');
+      }
+    }
+
+    // Next challenge handler
+    document.getElementById('next-btn').addEventListener('click', function() {
+      window.location.href = challenge.next_url;
+    });
+
+    document.getElementById("check-btn").addEventListener("click", checkAnswer);
+    renderChallenge();
+  </script>
+</body>
+</html>

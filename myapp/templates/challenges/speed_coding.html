@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Speed Coding Challenge - Dynamic Loader</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet" />
+  
+  <!-- Highlight.js CSS و JS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/monokai-sublime.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+  
+  <!-- Pyodide -->
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.23.3/full/pyodide.js"></script>
+  
+  <style>
+    .neon-border {
+      box-shadow: 0 0 15px rgba(255,94,148,0.5);
+    }
+    .code-editor {
+      background: #2d2d2d;
+      border-radius: 8px;
+      box-shadow: inset 0 4px 12px rgba(0,0,0,0.3);
+      padding: 1rem;
+      position: relative;
+    }
+    code[contenteditable="true"] {
+      outline: none;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'Source Code Pro', monospace;
+    }
+    .hint {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+      padding: 0.75rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+    #output {
+      background: #1e293b;
+      color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      min-height: 50px;
+      white-space: pre-wrap;
+    }
+    #result {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+    /* Animation classes */
+    .animate-bounce {
+      animation: bounce 1s;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .animate-shake {
+      animation: shake 0.3s;
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+    @keyframes fall {
+      0% { transform: translateY(-100vh); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+    /* Modal styles */
+    #modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+    #answer-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 20px;
+      z-index: 1000;
+      border-radius: 8px;
+      max-width: 90%;
+      max-height: 80%;
+      overflow: auto;
+    }
+    #answer-modal pre {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
+  <div class="container bg-white/90 rounded-2xl p-8 shadow-2xl neon-border max-w-3xl mx-4 sm:mx-auto">
+    <div class="text-center mb-6">
+      <h1 id="challenge-title" class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+        Speed Coding Challenge
+      </h1>
+      <p id="challenge-question" class="text-gray-600 font-medium"></p>
+    </div>
+    
+    <div class="hint">
+      <p><strong>Hints:</strong></p>
+      <ul id="hints-list" class="list-disc ml-5"></ul>
+    </div>
+    
+    <div class="code-editor mb-6">
+      <pre class="font-mono text-sm text-white bg-transparent rounded-md">
+        <code id="code-content" class="language-python w-full h-auto" contenteditable="true" spellcheck="false"></code>
+      </pre>
+    </div>
+    
+    <div class="flex gap-4">
+      <button id="run-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg shadow-lg transition-all">Run Code</button>
+      <button id="check-btn" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-xl transition-all">Check Answer</button>
+      <button id="show-answer-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg shadow-lg transition-all">Show Answer</button>
+    </div>
+    
+    <pre id="output" class="mt-4"></pre>
+    <p id="result"></p>
+  </div>
+  
+  <!-- Modal for correct answer -->
+  <div id="modal-overlay"></div>
+  <div id="answer-modal">
+    <h2>Correct Answer</h2>
+    <pre id="correct-answer"></pre>
+    <button id="close-modal" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-4">Close</button>
+  </div>
+  
+  <script>
+    let pyodide = null;
+    async function initPyodide() {
+      pyodide = await loadPyodide();
+    }
+    initPyodide();
+    
+    /* Expected JSON structure:
+      {
+        "id": <number>,
+        "question": <string>,
+        "code_snippet": <string>,  // initial code template, e.g., "# Write your code here"
+        "correct_answer": <string>,
+        "hints": [<string>, ...],
+        "test_cases": [
+          { "input": <string>, "expected_output": <value>, "type": "function_call" }
+        ],
+        "validation_rules": [<string>, ...],
+        "created_at": <timestamp>,
+        "lesson": <number>
+      }
+    */
+    const challenge = JSON.parse('{{ challenge_json|escapejs }}');
+
+      console.log(challenge);
+
+    function renderChallenge(challenge) {
+      document.getElementById("challenge-question").textContent = challenge.question;
+      const codeContent = document.getElementById("code-content");
+      codeContent.innerHTML = challenge.code_snippet.replace(/\n/g, "<br>");      
+      const hintsList = document.getElementById("hints-list");
+      hintsList.innerHTML = "";
+      challenge.options.hints.forEach(hint => {
+    const li = document.createElement("li");
+    li.textContent = hint;
+    hintsList.appendChild(li);
+      });
+
+
+    }
+    
+    const codeBlock = document.getElementById("code-content");
+    const outputEl = document.getElementById("output");
+    const resultEl = document.getElementById("result");
+    
+    // Generic cheat detection using regex for better flexibility
+    function cheatDetected(userCode) {
+      const patterns = [
+        /return\s*\(?\s*120\s*\)?/,
+        /print\s*\(\s*120\s*\)/
+      ];
+      return patterns.some(pattern => pattern.test(userCode));
+    }
+    
+    document.getElementById("run-btn").addEventListener("click", async () => {
+      const userCode = codeBlock.textContent;
+      
+      if (cheatDetected(userCode)) {
+        outputEl.textContent = "🚫 Directly returning or printing 120 is not allowed!";
+        return;
+      }
+      
+      outputEl.textContent = "Running code...";
+      try {
+        await pyodide.runPythonAsync("if 'factorial' in globals(): del factorial");
+        await pyodide.runPythonAsync("import sys\nfrom io import StringIO\nsys.stdout = StringIO()");
+        await pyodide.runPythonAsync(userCode);
+        let output = await pyodide.runPythonAsync("sys.stdout.getvalue()");
+        outputEl.textContent = output;
+      } catch (err) {
+        outputEl.textContent = err;
+      }
+    });
+    
+    function checkAnswer() {
+      (async () => {
+        const userCode = codeBlock.textContent;
+        if (cheatDetected(userCode)) {
+          resultEl.textContent = "😖 Cheating detected! Do not directly return or print 120!";
+          resultEl.style.color = "#ef4444";
+          resultEl.classList.add("animate-shake");
+          setTimeout(() => { resultEl.classList.remove("animate-shake"); }, 800);
+          return;
+        }
+        try {
+          const testOutput = await pyodide.runPythonAsync("factorial(5)");
+          if (parseInt(testOutput) === 120) {
+            resultEl.textContent = "🎉 Correct! Well done! 💯";
+            resultEl.style.color = "#22c55e";
+            resultEl.classList.add("animate-bounce");
+            for (let i = 0; i < 50; i++) {
+              const confetti = document.createElement("div");
+              confetti.className = "absolute w-2 h-2 bg-yellow-400 rounded-full";
+              confetti.style.left = Math.random() * 100 + "%";
+              confetti.style.top = Math.random() * 100 + "%";
+              confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear`;
+              document.body.appendChild(confetti);
+              setTimeout(() => confetti.remove(), 5000);
+            }
+          } else {
+            resultEl.textContent = "😖 Oops! Try again! 💪";
+            resultEl.style.color = "#ef4444";
+            resultEl.classList.add("animate-shake");
+            setTimeout(() => {
+              resultEl.classList.remove("animate-shake");
+            }, 800);
+          }
+        } catch (e) {
+          alert("😖 " + e + " Please define the function correctly using recursion.");
+        }
+      })();
+    }
+    
+    document.getElementById("check-btn").addEventListener("click", checkAnswer);
+    
+    document.getElementById("show-answer-btn").addEventListener("click", () => {
+   
+        const formattedAnswer = challenge.correct_answer.replace(/\\n/g, "<br>");
+  document.getElementById("correct-answer").innerHTML = formattedAnswer;
+  document.getElementById("modal-overlay").style.display = "block";
+  document.getElementById("answer-modal").style.display = "block";
+    });
+    
+    document.getElementById("close-modal").addEventListener("click", () => {
+      document.getElementById("modal-overlay").style.display = "none";
+      document.getElementById("answer-modal").style.display = "none";
+    });
+    
+    renderChallenge(challenge);
+  </script>
+</body>
+</html>

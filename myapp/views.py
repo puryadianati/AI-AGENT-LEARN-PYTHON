@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .models import Lesson, Challenge
 from openai import OpenAI
+from django.shortcuts import render, get_object_or_404
+
+
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
@@ -210,20 +213,77 @@ def get_random_challenge(request):
     return JsonResponse(serializer.data, safe=False)
 
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .models import Lesson
 
 def lesson_list(request):
-    lessons = Lesson.objects.all()
-    
     lesson_data = {
-        'beginner': lessons.filter(level='beginner'),
-        'intermediate': lessons.filter(level='intermediate'),
-        'advanced': lessons.filter(level='advanced'),
+        'beginner': Lesson.objects.filter(level='beginner'),
+        'intermediate': Lesson.objects.filter(level='intermediate'),
+        'advanced': Lesson.objects.filter(level='advanced'),
     }
-
     return render(request, 'courses/index.html', {'lesson_data': lesson_data})
+from django.shortcuts import render, get_object_or_404
+from django.http import Http404
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from .models import Lesson, Challenge
 
+def lesson_challenges(request, lesson_id, challenge_index=0):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    
+    # Create challenge sequence (5 of each type)
+    challenges = []
+    challenge_types = ['fill_in_blank', 'drag_drop', 'speed_coding', 'quiz', 'project']
+    
+    # Validate template existence
+    valid_templates = {
+        'fill_in_blank': 'fill_in_blank.html',
+        'drag_drop': 'drag_drop.html',
+        'speed_coding': 'speed_coding.html',
+        'quiz': 'quiz.html',
+        'project': 'project.html'  # Add this template if needed
+    }
+    
+    # Build challenge sequence
+    for challenge_type in challenge_types:
+        try:
+            challenges.extend(
+                lesson.challenges.filter(challenge_type=challenge_type)[:5]
+            )
+        except KeyError:
+            raise Http404(f"Invalid challenge type: {challenge_type}")
 
-
-
+    # Handle completion state
+    if challenge_index >= len(challenges):
+        return render(request, 'challenges/lesson_complete.html', {
+            'lesson': lesson
+        })
+    
+    current_challenge = challenges[challenge_index]
+    
+    # Prepare challenge data for JSON serialization
+    challenge_data = {
+        'id': current_challenge.id,
+        'question': current_challenge.question,
+        'code_snippet': current_challenge.code_snippet,
+        'correct_answer': current_challenge.correct_answer,
+        'options': current_challenge.options,
+        'challenge_type': current_challenge.challenge_type,
+        'next_url': f"/api/lessons/{lesson_id}/challenges/{challenge_index + 1}/"
+    }
+    
+    # Generate next URL
+    next_url = f"api/lesson/{lesson_id}/challenges/{challenge_index + 1}/"
+    
+    # Verify template exists
+    template_name = valid_templates.get(current_challenge.challenge_type)
+    if not template_name:
+        raise Http404(f"No template for challenge type: {current_challenge.challenge_type}")
+    
+    return render(request, f'challenges/{template_name}', {
+        'lesson': lesson,
+        'challenge_json': json.dumps(challenge_data, cls=DjangoJSONEncoder),
+        'next_url': next_url,
+        'challenge_type': current_challenge.challenge_type
+    })
