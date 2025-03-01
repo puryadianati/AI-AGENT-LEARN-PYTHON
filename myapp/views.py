@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from .models import Lesson, Challenge
 from openai import OpenAI
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 
 
 
@@ -229,61 +230,101 @@ import json
 from django.core.serializers.json import DjangoJSONEncoder
 from .models import Lesson, Challenge
 
-def lesson_challenges(request, lesson_id, challenge_index=0):
-    lesson = get_object_or_404(Lesson, id=lesson_id)
-    
-    # Create challenge sequence (5 of each type)
-    challenges = []
-    challenge_types = ['fill_in_blank', 'drag_drop', 'speed_coding', 'quiz', 'project']
-    
-    # Validate template existence
-    valid_templates = {
-        'fill_in_blank': 'fill_in_blank.html',
-        'drag_drop': 'drag_drop.html',
-        'speed_coding': 'speed_coding.html',
-        'quiz': 'quiz.html',
-        'project': 'project.html'  # Add this template if needed
-    }
-    
-    # Build challenge sequence
-    for challenge_type in challenge_types:
-        try:
-            challenges.extend(
-                lesson.challenges.filter(challenge_type=challenge_type)[:5]
-            )
-        except KeyError:
-            raise Http404(f"Invalid challenge type: {challenge_type}")
 
-    # Handle completion state
-    if challenge_index >= len(challenges):
-        return render(request, 'challenges/lesson_complete.html', {
-            'lesson': lesson
-        })
+def lesson_challenges(request, lesson_id, challenge_index=0):
+    """
+    View function for handling lesson challenge flow with instruction pages
+    """
+    try:
+        lesson = get_object_or_404(Lesson, pk=lesson_id)
+        challenge_index = int(challenge_index)
+        
+        challenges = lesson.challenges.all().order_by('order')
+        
+        if not challenges.exists():
+            return render(request, 'challenges/no_challenges.html', {'lesson': lesson})
+        
+        # ساخت مراحل به صورت جفت‌های آموزش-چالش
+        steps = []
+        for challenge in challenges:
+            steps.extend([
+                {'type': 'instruction', 'challenge': challenge},
+                {'type': 'challenge', 'challenge': challenge}
+            ])
+        
+        if challenge_index >= len(steps):
+            return render(request, 'challenges/lesson_complete.html', {
+                'lesson': lesson,
+                'progress': 100
+            })
+        
+        current_step = steps[challenge_index]
+        current_challenge = current_step['challenge']
+        progress = int((challenge_index + 1) / len(steps) * 100)
+        # تبدیل '\\n' به newline واقعی قبل از ارسال به قالب
+        if current_challenge.code_snippet_instruction:
+        # ابتدا می‌توانید محتوای رشته را چاپ کنید تا مطمئن شوید
+            print("Before:", repr(current_challenge.code_snippet_instruction))
+        # استفاده از raw string برای جایگزینی
+            current_challenge.code_snippet_instruction = current_challenge.code_snippet_instruction.replace(r'\n', '\n')
+            print("After:", repr(current_challenge.code_snippet_instruction))
+        
+        # ساخت URL صحیح با استفاده از reverse
+        next_index = challenge_index + 1
+        next_url = reverse('lesson_challenge_detail', args=[lesson_id, next_index]) if next_index < len(steps) else None
+
+        
+
+        if current_step['type'] == 'instruction':
+            return render(request, 'challenges/instruction.html', {
+                'lesson': lesson,
+                'challenge': current_challenge,
+                'next_url': next_url,
+                'progress': progress,
+                'current_step': challenge_index + 1,
+                'total_steps': len(steps)
+            })
+        
+        # Handle challenge step
+        challenge_type = current_challenge.challenge_type
+        template_map = {
+            'fill_in_blank': 'fill_in_blank.html',
+            'drag_drop': 'drag_drop.html',
+            'speed_coding': 'speed_coding.html',
+            'quiz': 'quiz.html',
+            'project': 'project.html'
+        }
+        
+        # Validate challenge type
+        if challenge_type not in template_map:
+            raise Http404(f"Challenge type {challenge_type} not supported")
+        
+        # Prepare challenge context
+        challenge_context = {
+            'lesson': lesson,
+            'challenge': current_challenge,
+            'next_url': next_url,
+            'progress': progress,
+            'current_step': challenge_index + 1,
+            'total_steps': len(steps),
+            'options': current_challenge.options,
+            'code_snippet': current_challenge.code_snippet,
+            'correct_answer': current_challenge.correct_answer,
+        }
+        
+        # Add JSON data for JS interactions
+        challenge_context['challenge_json'] = json.dumps({
+            'id': current_challenge.id,
+            'question': current_challenge.question,
+            'code_snippet': current_challenge.code_snippet,
+            'correct_answer': current_challenge.correct_answer,
+            'options': current_challenge.options,
+            'type': challenge_type,
+            'next_url': next_url,  # Add this line
+
+        }, cls=DjangoJSONEncoder)
+        
+        return render(request, f'challenges/{template_map[challenge_type]}', challenge_context)
     
-    current_challenge = challenges[challenge_index]
-    
-    # Prepare challenge data for JSON serialization
-    challenge_data = {
-        'id': current_challenge.id,
-        'question': current_challenge.question,
-        'code_snippet': current_challenge.code_snippet,
-        'correct_answer': current_challenge.correct_answer,
-        'options': current_challenge.options,
-        'challenge_type': current_challenge.challenge_type,
-        'next_url': f"/api/lessons/{lesson_id}/challenges/{challenge_index + 1}/"
-    }
-    
-    # Generate next URL
-    next_url = f"api/lesson/{lesson_id}/challenges/{challenge_index + 1}/"
-    
-    # Verify template exists
-    template_name = valid_templates.get(current_challenge.challenge_type)
-    if not template_name:
-        raise Http404(f"No template for challenge type: {current_challenge.challenge_type}")
-    
-    return render(request, f'challenges/{template_name}', {
-        'lesson': lesson,
-        'challenge_json': json.dumps(challenge_data, cls=DjangoJSONEncoder),
-        'next_url': next_url,
-        'challenge_type': current_challenge.challenge_type
-    })
+    except ValueError:
+        raise Http404("Invalid challenge index format")

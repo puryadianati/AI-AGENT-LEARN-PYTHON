@@ -10,9 +10,10 @@ urlpatterns = [
     path('', lesson_list, name='lesson_list'),
     # مسیر شروع چالش‌ها (اندیس اولیه 0)
     # Lesson challenge flow
-    path('lessons/<int:lesson_id>/challenges/<int:challenge_index>/', 
-         lesson_challenges, 
-         name='lesson_challenge_detail'),
+    # urls.py
+    path('lesson/<int:lesson_id>/challenge/<int:challenge_index>/', lesson_challenges, name='lesson_challenge_detail')
+
+
 ]
 
 

@@ -46,18 +46,19 @@ from django.db import models
 
 class Challenge(models.Model):
     lesson = models.ForeignKey(
-        'Lesson',  # Assuming 'Lesson' is the name of the related model
+        'Lesson',  
         on_delete=models.CASCADE,
         related_name="challenges"
     )
     order = models.PositiveIntegerField(
         default=1,
-        help_text="Order of the challenge within the lesson"
+        help_text="ترتیب چالش در درس"
     )
     question = models.TextField()
     code_snippet = models.TextField()
-    correct_answer = models.TextField()  # Changed to TextField
-    options = models.JSONField()  # Stores hints, test_cases, etc.
+    code_snippet_instruction = models.TextField(null=True,blank=True)
+    correct_answer = models.TextField()
+    options = models.JSONField()  # ذخیره گزینه‌ها، hints یا test cases
     challenge_type = models.CharField(
         max_length=20,
         choices=[
@@ -68,6 +69,11 @@ class Challenge(models.Model):
             ('project', 'Project')
         ]
     )
+    lesson_note = models.TextField(
+        blank=True,
+        null=True,
+        help_text="درسنامه یا توضیحات مرتبط با چالش"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -75,6 +81,7 @@ class Challenge(models.Model):
 
     class Meta:
         ordering = ['order']
+
 
 class UserProgress(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)

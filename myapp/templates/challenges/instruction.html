@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ challenge.lesson.title }} - آموزش</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap" rel="stylesheet">
+    
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/monokai-sublime.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <style>
+        body { font-family: 'Source Code Pro', monospace; }
+        pre { background: #2d2d2d; padding: 1rem; border-radius: 0.5rem; }
+        .lesson-content { line-height: 1.8; }
+        .lesson-content code { background: #f3f4f6; padding: 0.2em 0.4em; border-radius: 0.25rem; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 min-h-screen p-4">
+    <div class="bg-white max-w-3xl mx-auto rounded-2xl p-8 shadow-2xl">
+        
+        <!-- عنوان -->
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                {{ challenge.lesson.title }}
+            </h1>
+            <div class="text-sm text-gray-500">
+                نوع چالش: {{ challenge.get_challenge_type_display }}
+            </div>
+        </div>
+
+        <!-- محتوای آموزشی -->
+        <div class="lesson-content text-gray-800 mb-8">
+            {{ challenge.lesson_note|safe }}
+        </div>
+
+        <!-- کد نمونه -->
+        {% if challenge.code_snippet_instruction %}
+        <div class="mb-8">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">کد نمونه</h2>
+            <pre dir="ltr"><code class="language-python">{{ challenge.code_snippet_instruction|safe }}</code></pre>
+        </div>
+        {% endif %}
+
+     
+        <!-- دکمه شروع چالش -->
+        <div class="text-center mt-8">
+            <a href="{{ next_url }}" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-all">
+                شروع چالش →
+            </a>
+        </div>
+    </div>
+
+    <script>hljs.highlightAll();</script>
+</body>
+</html>
