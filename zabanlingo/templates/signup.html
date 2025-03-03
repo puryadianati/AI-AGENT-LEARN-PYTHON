@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+   
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'zaban/css/signup.css' %}" />
+    <link rel="stylesheet" href="{% static 'zaban/css/main.css' %}" />
+    <title>Duolingo - Signup</title>
+    <link rel="icon" href="{% static 'zaban/assets/images/favicon.ico' %}" />
+    <script src="{% static 'zaban/js/signup.js' %}"></script>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="signup-page-container">
+        <div class="close-button-div">
+            <a href="{% url 'index' %}">
+              <img src="{% static 'zaban/assets/svg/close-button.svg' %}" alt="close button"/>
+            </a>
+          </div>
+          <div class="login-button-container">
+            <button
+              class="login-button button-div"
+              id="login-button"
+              onclick="loginButtonAnimation()"
+            >
+              LOGIN
+            </button>
+          </div>
+          <form class="signup-section-main" id="main-form" method="POST">
+            {% csrf_token %}
+            <div class="signup-information-div">
+              <h1 class="create-profile-heading">Create your profile</h1>
+              
+              <!-- نمایش پیغام‌های خطا -->
+              {% if messages %}
+              <div class="alert alert-danger">
+                {% for message in messages %}
+                  <div>{{ message }}</div>
+                {% endfor %}
+              </div>
+              {% endif %}
+
+              <div class="input-fields-div">
+                <!-- فیلدهای فرم با استفاده از ویجت‌های جنگو -->
+                <div class="field-one">
+                  <input
+                    class="input-field"
+                    id="id_age"
+                    name="age"
+                    type="number"
+                    placeholder="Age"
+                    min="13"
+                    max="120"
+                    required
+                  />
+                  <div class="error-message" id="age-error-message"></div>
+                  <div class="age-privacy-div" id="age-privacy-div">
+                    <span class="age-privacy-span">
+                      Providing your age ensures you get the right Duolingo
+                      experience. For more details, please visit our
+                      <a href="https://www.duolingo.com/privacy" target="_blank" class="privacy-policy-link">
+                        <b>Privacy Policy</b>
+                      </a>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="field-one">
+                  <input
+                    class="input-field"
+                    id="id_name"
+                    name="name"
+                    type="text"
+                    placeholder="Name"
+                    required
+                  />
+                  <div class="error-message" id="name-error-message"></div>
+                </div>
+
+                <div class="field-one">
+                  <input
+                    class="input-field"
+                    id="id_email"
+                    name="email"
+                    type="email"
+                    placeholder="Email"
+                    required
+                  />
+                  <div class="error-message" id="email-error-message"></div>
+                </div>
+
+                <div class="field-one">
+                  <input
+                    class="input-field"
+                    id="id_password"
+                    name="password"
+                    type="password"
+                    placeholder="Password"
+                    minlength="8"
+                    required
+                  />
+                  <div class="error-message" id="password-error-message"></div>
+                </div>
+              </div>
+
+              <div class="create-account-button-container">
+                <button
+                  type="submit"
+                  class="create-account-button button-div"
+                  id="create-account-button"
+                >
+                  <span id="create-account-span">CREATE ACCOUNT</span>
+                  <div class="loading-balls-container hidden" id="loading-balls-container">
+                    <div class="animation loading-ball"></div>
+                    <div class="animation second-animation loading-ball"></div>
+                    <div class="animation third-animation loading-ball"></div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </form>
+      </div>
+    </div>
+
+    <script>
+      // تنظیمات عمومی برای دسترسی به URLها
+      const SIGNUP_URL = "{% url 'signup' %}";
+      const LOGIN_URL = "{% url 'login' %}";
+      const INDEX_URL = "{% url 'index' %}";
+    </script>
+  </body>
+</html>

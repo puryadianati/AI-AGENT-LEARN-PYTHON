@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Language Selection</title>
+        <link rel="icon" href="{% static 'zaban/assets/images/favicon.ico' %}" />
+        <link rel="stylesheet" href="{% static 'zaban/css/main.css' %}">
+        <link rel="stylesheet" href="{% static 'zaban/css/languages-select-page.css' %}">
+        <script src="{% static 'zaban/js/language-select-page.js' %}"></script>
+    </head>
+    <body>
+        <div class="background">
+            <header class="duolingo-logo-header">
+                <div class="duolingo-logo-div">
+                    <a class="logo-a-tag" href="{% url 'index' %}">
+                        <img class="duolingo-logo" src="{% static 'zaban/assets/svg/duolingo-logo-white.svg' %}" alt="Duolingo Logo">
+                    </a>
+                </div>
+            </header>
+            
+            <div class="countries-main-container">
+                <div class="countries-container">
+                    <div class="flags-and-names-container">
+                        <h1 class="learn-heading">I want to learn...</h1>
+                        <div class="languages-grid">
+                            {% for lang in languages %}
+                            <button class="country-button" data-lang="{{ lang.code }}">
+                                <div class="country-one">
+                                    <div class="country-flag">
+                                        <img src="{% static lang.flag_path %}" alt="{{ lang.name }} Flag">
+                                    </div>
+                                    <h2 class="language-name">{{ lang.name }}</h2>
+                                    <div class="no-of-learners">
+                                        {% if lang.learners %}
+                                            {{ lang.learners }} learners
+                                        {% else %}
+                                            Coming Soon
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const LANGUAGE_SELECT_URL = "{% url 'language_selected' %}";
+            const SIGNUP_URL = "{% url 'signup' %}";
+      const LOGIN_URL = "{% url 'login' %}";
+      const INDEX_URL = "{% url 'index' %}";
+        </script>
+    </body>
+</html>

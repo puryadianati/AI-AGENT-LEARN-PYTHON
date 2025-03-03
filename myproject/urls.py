@@ -21,5 +21,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('myapp.urls')),  # 👈 این خط را اضافه کنید
     path('api/', include('myapp.urls')),  # اضافه کردن API های سرفصل‌ها، درس‌ها و چالش‌ها
-
+    path('zaban/',include('zabanlingo.urls'))
 ]
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
