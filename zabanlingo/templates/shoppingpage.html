@@ -1,15 +1,16 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Duolingo-shopping</title>
-    <link rel="icon" href="../assets/images/favicon.ico" />
-    <link rel="stylesheet" href="../css/leaderboard.css" />
-    <link rel="stylesheet" href="../css/learn.css" />
-    <link rel="stylesheet" href="../css/main.css" />
-    <link rel="stylesheet" href="../css/shoppingpage.css" />
-    <link rel="stylesheet" href="../scss/shoppingpage.css" />
+    <link rel="icon" href="{% static 'zaban/assets/images/favicon.ico' %}" />
+    <link rel="stylesheet" href="{% static 'zaban/css/leaderboard.css' %}" />
+    <link rel="stylesheet" href="{% static 'zaban/css/learn.css' %}" />
+    <link rel="stylesheet" href="{% static 'zaban/css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'zaban/css/shoppingpage.css' %}" />
+    <link rel="stylesheet" href="{% static 'zaban/scss/shoppingpage.css' %}" />
   </head>
   <body>
     <div class="main-container">
@@ -17,33 +18,33 @@
       <div class="sidebar">
         <div class="logo-container">
           <img
-            src="../assets/svg/duolingo-green-text-only.svg"
+            src="{% static 'zaban/assets/svg/duolingo-green-text-only.svg' %}"
             alt="dolingo-text"
           />
         </div>
         <div class="sidebar-buttons">
-          <a href="./learn.html" class="button-in-sidebar">
+          <a href="{% url 'learn' %}" class="button-in-sidebar">
             <span class="icon-and-text-wrap">
               <div class="icon-in-button">
-                <img src="../assets/svg/home-in-sidebar.svg" alt="home-icon" />
+                <img src="{% static 'zaban/assets/svg/home-in-sidebar.svg' %}" alt="home-icon" />
               </div>
               <span class="text-in-button"> Learn </span>
             </span>
           </a>
-          <a href="leaderboard.html" class="button-in-sidebar">
+          <a href="{% url 'leaderboard' %}" class="button-in-sidebar">
             <span class="icon-and-text-wrap">
               <div class="icon-in-button">
-                <img src="../assets/svg/badge-in-sidebar.svg" alt="home-icon" />
+                <img src="{% static 'zaban/assets/svg/badge-in-sidebar.svg' %}" alt="home-icon" />
               </div>
               <span class="text-in-button"> Leaderboard </span>
             </span>
           </a>
-          <a href="profile-page.html" class="button-in-sidebar">
+          <a href="{% url 'profile-page' %}" class="button-in-sidebar">
             <span class="icon-and-text-wrap">
               <div class="icon-in-button">
                 <img
                 id="profile-image"
-                  src="../assets/svg/profile-image-temp.svg"
+                  src="{% static 'zaban/assets/svg/profile-image-temp.svg' %}"
                   alt="home-icon"
                   class="profile"
                 />
@@ -51,19 +52,19 @@
               <span class="text-in-button"> Profile </span>
             </span>
           </a>
-          <a href="./shoppingpage.html" class="button-in-sidebar">
+          <a href="{% url 'shoppingpage' %}" class="button-in-sidebar">
             <span class="icon-and-text-wrap selected">
               <div class="icon-in-button">
-                <img src="../assets/svg/shop-in-sidebar.svg" alt="home-icon" />
+                <img src="{% static 'zaban/assets/svg/shop-in-sidebar.svg' %}" alt="home-icon" />
               </div>
               <span class="text-in-button"> Shop </span>
             </span>
           </a>
-          <a href="./faq.html" class="button-in-sidebar">
+          <a href="{% url 'faq' %}" class="button-in-sidebar">
             <span class="icon-and-text-wrap">
               <div class="icon-in-button">
                 <img
-                  src="../assets/images/sidebar-icon-faq.png"
+                  src="{% static 'zaban/assets/images/sidebar-icon-faq.png' %}"
                   alt="home-icon"
                 />
               </div>
@@ -81,7 +82,7 @@
               <span class="icon-and-text-wrap">
                 <div class="icon-in-button">
                   <img
-                    src="../assets/svg/country-flags/transparent.svg"
+                    src="{% static 'zaban/assets/svg/country-flags/transparent.svg' %}"
                     class="country-flag"
                   />
                 </div>
@@ -91,7 +92,7 @@
               <span class="icon-and-text-wrap">
                 <div class="icon-in-button">
                   <img
-                    src="../assets/svg/lesson-xp.svg"
+                    src="{% static 'zaban/assets/svg/lesson-xp.svg' %}"
                     alt="home-icon"
                     class="profile"
                   />
@@ -103,7 +104,7 @@
               <span class="icon-and-text-wrap">
                 <div class="icon-in-button">
                   <img
-                    src="../assets/svg/gems-icon.svg"
+                    src="{% static 'zaban/assets/svg/gems-icon.svg' %}"
                     alt="home-icon"
                     class="profile"
                   />
@@ -115,7 +116,7 @@
               <span class="icon-and-text-wrap">
                 <div class="icon-in-button">
                   <img
-                    src="../assets/svg/heart-filled-red.svg"
+                    src="{% static 'zaban/assets/svg/heart-filled-red.svg' %}"
                     alt="home-icon"
                     class="profile"
                   />
@@ -126,12 +127,12 @@
           </div>
           <div class="try-super-box">
             <img
-              src="../assets/svg/super-icon.svg"
+              src="{% static 'zaban/assets/svg/super-icon.svg' %}"
               alt="super-text"
               id="try-super-image-one"
             />
             <img
-              src="../assets/svg/super-duo-owl.svg"
+              src="{% static 'zaban/assets/svg/super-duo-owl.svg' %}"
               alt="super-duo-owl"
               id="try-super-image-two"
             />
@@ -148,11 +149,11 @@
           <div class="try-super-box">
             <div class="league-header-with-link">
               <h2>Nexus League</h2>
-              <h2><a href="./leaderboard.html">View League</a></h2>
+              <h2><a href="{% url 'leaderboard' %}">View League</a></h2>
             </div>
             <div class="league-header-with-link">
               <img
-                src="../assets/svg/amethyst-league-icon.svg"
+                src="{% static 'zaban/assets/svg/amethyst-league-icon.svg' %}"
                 alt="amethyst-league-icon"
               />
               <div class="league-text-container">
@@ -223,7 +224,7 @@
                 />
                 <button
                   class="freetrialButton"
-                  onclick="window.location.href = './superduolingo.html';"
+                  onclick="window.location.href = '{% url 'superduolingo' %}';"
                 >
                   <span>Buy Super</span>
                 </button>
@@ -237,28 +238,28 @@
       </div>
     </div>
     <div class="sidebar-buttons bottom-nav">
-      <a href="learn.html" class="button-in-sidebar">
+      <a href="{% url 'learn' %}" class="button-in-sidebar">
         <span class="icon-and-text-wrap">
           <div class="icon-in-button">
-            <img src="../assets/svg/home-in-sidebar.svg" alt="home-icon" />
+            <img src="{% static 'zaban/assets/svg/home-in-sidebar.svg' %}" alt="home-icon" />
           </div>
       
         </span>
       </a>
-      <a href="leaderboard.html" class="button-in-sidebar">
+      <a href="{% url 'leaderboard' %}" class="button-in-sidebar">
         <span class="icon-and-text-wrap">
           <div class="icon-in-button">
-            <img src="../assets/svg/badge-in-sidebar.svg" alt="home-icon" />
+            <img src="{% static 'zaban/assets/svg/badge-in-sidebar.svg' %}" alt="home-icon" />
           </div>
       
         </span>
       </a>
-      <a href="profile-page.html" class="button-in-sidebar">
+      <a href="{% url 'profile-page' %}" class="button-in-sidebar">
         <span class="icon-and-text-wrap">
           <div class="icon-in-button">
             <img
               id="profile-image"
-              src="../assets/svg/profile-image-temp.svg"
+              src="{% static 'zaban/assets/svg/profile-image-temp.svg' %}"
               alt="home-icon"
               class="profile"
             />
@@ -266,24 +267,24 @@
       
         </span>
       </a>
-      <a href="./shoppingpage.html" class="button-in-sidebar">
+      <a href="{% url 'shoppingpage' %}" class="button-in-sidebar">
       <span class="icon-and-text-wrap selected">
         <div class="icon-in-button">
-          <img src="../assets/svg/shop-in-sidebar.svg" alt="home-icon" />
+          <img src="{% static 'zaban/assets/svg/shop-in-sidebar.svg' %}" alt="home-icon" />
         </div>
       </span>
       </a>
-      <a href="./faq.html" class="button-in-sidebar">
+      <a href="{% url 'faq' %}" class="button-in-sidebar">
         <span class="icon-and-text-wrap">
           <div class="icon-in-button">
-            <img src="../assets/images/sidebar-icon-faq.png" alt="home-icon" />
+            <img src="{% static 'zaban/assets/images/sidebar-icon-faq.png' %}" alt="home-icon" />
           </div>
       
         </span>
       </a>
       </div>    
-    <script src="../js/shoppingpage.js"></script>
-    <script src="../js/learn.js"></script>
-    <script type="module" src="../js/updateShopData.js"></script>
+    <script src="{% static 'zaban/js/shoppingpage.js' %}"></script>
+    <script src="{% static 'zaban/js/learn.js' %}"></script>
+    <script type="module" src="{% static 'zaban/js/updateShopData.js' %}"></script>
   </body>
 </html>

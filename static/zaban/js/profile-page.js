@@ -1,5 +1,5 @@
 import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { app } from "./firebaseConfig.js";
+import { app } from "{% static 'zaban/js/firebaseConfig.js' %}";
 
 const db = getFirestore(app);
 

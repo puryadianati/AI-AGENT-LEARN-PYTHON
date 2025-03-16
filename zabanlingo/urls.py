@@ -3,14 +3,8 @@ from .views import *
 
 urlpatterns = [
     path('', index, name='index'),
-    path('language/<str:lang>/', language_page, name='language'),
-    path('login/',login_view, name='login'),
-    path('signup/', signup_view, name='signup'),
-    path('logout/', logout_view, name='logout'),
-    
-    # Password reset views
-
-    path('dashboard/',dashboard, name='dashboard'),
+    path('login/', LoginView.as_view(), name='login'),  # مسیر برای ورود
+    path('register/', RegisterView.as_view(), name='register'),  # URL برای ثبت‌نام
 
 
 

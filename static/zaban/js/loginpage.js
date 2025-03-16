@@ -1,114 +1,45 @@
-// فراخوانی ایونت‌ها با استفاده از Django URL
 const loginAccountButtonAnimation = (event) => {
-    event.preventDefault();
-    const button = document.getElementById("create-account-button");
-    const loadingIndicator = document.getElementById("loading-balls-container");
-    const loginText = document.getElementById("login-span");
+    document.getElementById("create-account-button").classList.toggle('clicked');
+    setTimeout(() => document.getElementById("create-account-button").classList.toggle('clicked'), 300)
+    console.log("Reached Animation");
 
-    toggleButtonState(button, loadingIndicator, loginText, true);
-    
-    setTimeout(() => {
-        validateEntry(event);
-        toggleButtonState(button, loadingIndicator, loginText, false);
-    }, 1000);
-};
+    document.getElementById('login-span').classList.toggle('hidden');
+    document.getElementById('loading-balls-container').classList.toggle('hidden');
+}
 
 const signupButtonAnimation = () => {
-    const button = document.getElementById("login-button");
-    button.classList.add('clicked');
-    
-    setTimeout(() => {
-        button.classList.remove('clicked');
-        window.location.href = SIGNUP_URL; // استفاده از متغیر全局
-    }, 300);
-};
+    document.getElementById("login-button").classList.toggle('clicked');
+    setTimeout(() => document.getElementById("login-button").classList.toggle('clicked'), 300)
+    window.location.href = "languages-select-page.html";
+}
 
-// اعتبارسنجی پیشرفته با استفاده از Django Messages
-const validateEntry = async (event) => {
+const validateEntry = (event) => {
     event.preventDefault();
-    const form = event.target.closest('form');
-    const formData = new FormData(form);
-    
-    try {
-        const response = await fetch("{% url 'login' %}", {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-                'Accept': 'application/json',
-            },
-            body: formData
-        });
+    var emailInput = document.getElementById('emailInput');
+    var passwordInput = document.getElementById('passInput');
+    var divPassword = document.getElementById('divPassword');
 
-        const data = await response.json();
-        
-        if (data.success) {
-            window.location.href = "{% url 'dashboard' %}";
-        } else {
-            handleValidationErrors(data.errors);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showGeneralError();
+    var errorEmail = document.getElementById('errorEmail');
+    var errorPassword = document.getElementById('errorPassword');
+
+    errorEmail.textContent = '';
+    errorPassword.textContent = '';
+
+    if (!emailInput.value) {
+        errorEmail.innerHTML = '<img src="/static/zaban/assets/svg/error-message-icon.svg" alt=""> <span>Invalid email address.</span>';
+        emailInput.style.border = '2px solid #ff0000'; // Change border color to red  
     }
-};
-
-// توابع کمکی
-const toggleButtonState = (button, loader, textElement, isLoading) => {
-    button.classList.toggle('clicked', isLoading);
-    loader.classList.toggle('hidden', !isLoading);
-    textElement.classList.toggle('hidden', isLoading);
-};
-
-const handleValidationErrors = (errors) => {
-    // مدیریت خطاهای سرور
-    const errorMapping = {
-        username: 'emailInput',
-        password: 'passInput'
-    };
-
-    for (const [field, messages] of Object.entries(errors)) {
-        const elementId = errorMapping[field] || field;
-        const input = document.getElementById(elementId);
-        const errorDiv = document.getElementById(`error${field.charAt(0).toUpperCase() + field.slice(1)}`);
-        
-        showError(input, errorDiv, messages.join(', '));
+    else {
+        errorEmail.innerHTML = '';
+        emailInput.style.border = ''; // Reset to the default border color
     }
-};
 
-const showError = (inputElement, errorElement, message) => {
-    errorElement.innerHTML = `
-        <img src="{% static 'zaban/assets/svg/error-message-icon.svg' %}" alt="error">
-        <span>${message}</span>
-    `;
-    inputElement.style.border = '2px solid #ff0000';
-};
-
-const showGeneralError = () => {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'global-error';
-    errorDiv.innerHTML = `
-        <img src="{% static 'zaban/assets/svg/error-message-icon.svg' %}" alt="error">
-        <span>خطایی در ارتباط با سرور رخ داده است</span>
-    `;
-    document.body.prepend(errorDiv);
-};
-
-// تابع دریافت کوکی CSRF
-const getCookie = (name) => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.startsWith(name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
+    if (!passwordInput.value) {
+        errorPassword.innerHTML = '<img src="/static/zaban/assets/svg/error-message-icon.svg" alt=""> <span>Password too short.</span>';
+        divPassword.style.border = '2px solid #ff0000'; // Change border color to red  
     }
-    return cookieValue;
-};
-
-// تنظیم ایونت لیسنرها
-document.getElementById('login-form').addEventListener('submit', validateEntry);
-document.getElementById('signup-button').addEventListener('click', signupButtonAnimation);
+    else {
+        errorPassword.innerHTML = '';
+        divPassword.style.border = ''; // Reset to the default border color
+    }
+}

@@ -1,13 +1,16 @@
 import arrayForProfiles from './leaderBfetch.js';
+
 // console.log(arrayForProfiles);
 const profileList = arrayForProfiles;
+
 const getUserDataFromSessionStorage = () => {
-  return JSON.parse(sessionStorage.getItem("user-info"))
-}
-const getLanguageFlagPath=(languageCode)=>{
-  console.log(`../assets/svg/country-flags/${languageCode}-flag.svg`)
-  return `../assets/svg/country-flags/${languageCode}-flag.svg`
-}
+  return JSON.parse(sessionStorage.getItem("user-info"));
+};
+
+const getLanguageFlagPath = (languageCode) => {
+  // Use Django's static template tag to resolve the path
+  return `{% static 'zaban/assets/svg/country-flags/${languageCode}-flag.svg' %}`;
+};
 
 const placeuserStatistics = () => {
   let userData = getUserDataFromSessionStorage();

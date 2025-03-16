@@ -129,6 +129,6 @@ let challengeReadComprehension = (question) => {
             renderer: "svg",
             loop: true,
             autoplay: true,
-            path: "../assets/json-animations/speaker-white.json",
+            path: "{% static 'zaban/assets/json-animations/speaker-white.json' %}",
         });
 }

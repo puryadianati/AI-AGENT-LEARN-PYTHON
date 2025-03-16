@@ -1,131 +1,139 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Duolingo</title>
-    <link rel="icon" href="../assets/images/favicon.ico" />
-    <link rel="stylesheet" href="../css/learn.css" />
-    <link rel="stylesheet" href="../css/main.css" />
-  </head>
-  <body>
+    <link rel="icon" href="{% static 'zaban/assets/images/favicon.ico' %}" />
+    <link rel="stylesheet" href="{% static 'zaban/css/learn.css' %}" />
+    <link rel="stylesheet" href="{% static 'zaban/css/main.css' %}" />
+      <style>
+        .hidden {
+            display: none;
+        }
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .text-animation-container{
+            text-align: center;
+        }
+        .clicked {
+            transform: scale(0.95);
+            transition: transform 0.2s ease;
+        }
+    </style>
+</head>
+<body>
     <div class="main-container">
-      <!------------------------------------- Left Sidebar ------------------------------------------------>
-      <div class="sidebar">
-        <div class="logo-container">
-          <img
-            src="../assets/svg/duolingo-green-text-only.svg"
-            alt="dolingo-text"
-          />
-        </div>
-        <div class="sidebar-buttons">
-          <a href="" class="button-in-sidebar">
-            <span class="icon-and-text-wrap selected">
-              <div class="icon-in-button">
-                <img src="../assets/svg/home-in-sidebar.svg" alt="home-icon" />
-              </div>
-              <span class="text-in-button"> Learn </span>
-            </span>
-          </a>
-          <a href="leaderboard.html" class="button-in-sidebar">
-            <span class="icon-and-text-wrap">
-              <div class="icon-in-button">
-                <img src="../assets/svg/badge-in-sidebar.svg" alt="home-icon" />
-              </div>
-              <span class="text-in-button"> Leaderboard </span>
-            </span>
-          </a>
-          <a href="profile-page.html" class="button-in-sidebar">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <img src="{% static 'zaban/assets/svg/duolingo-green-text-only.svg' %}" alt="dolingo-text" />
+            </div>
+            <div class="sidebar-buttons">
+                <a href="{% url 'learn' %}" class="button-in-sidebar">
+                    <span class="icon-and-text-wrap selected">
+                        <div class="icon-in-button">
+                            <img src="{% static 'zaban/assets/svg/home-in-sidebar.svg' %}" alt="home-icon" />
+                        </div>
+                        <span class="text-in-button"> Learn </span>
+                    </span>
+                </a>
+                <a href="#" class="button-in-sidebar">
+                    <span class="icon-and-text-wrap">
+                        <div class="icon-in-button">
+                            <img src="{% static 'zaban/assets/svg/badge-in-sidebar.svg' %}" alt="leaderboard-icon" />
+                        </div>
+                        <span class="text-in-button"> Leaderboard </span>
+                    </span>
+                </a>
+                 <a href="#" class="button-in-sidebar">
             <span class="icon-and-text-wrap">
               <div class="icon-in-button">
                 <img
                   id="profile-image"
-                  src="../assets/svg/profile-image-temp.svg"
-                  alt="home-icon"
+                  src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'zaban/assets/svg/profile-image-temp.svg' %}{% endif %}"
+                  alt="profile-icon"
                   class="profile"
                 />
               </div>
               <span class="text-in-button"> Profile </span>
             </span>
           </a>
-          <a href="./shoppingpage.html" class="button-in-sidebar">
+          <a href="#" class="button-in-sidebar">
             <span class="icon-and-text-wrap">
               <div class="icon-in-button">
-                <img src="../assets/svg/shop-in-sidebar.svg" alt="home-icon" />
+                <img src="{% static 'zaban/assets/svg/shop-in-sidebar.svg' %}" alt="home-icon" />
               </div>
               <span class="text-in-button"> Shop </span>
             </span>
           </a>
-          <a href="./faq.html" class="button-in-sidebar">
+          <a href="#" class="button-in-sidebar">
             <span class="icon-and-text-wrap">
               <div class="icon-in-button">
-                <img src="../assets/images/sidebar-icon-faq.png" alt="home-icon"/>
+                <img src="{% static 'zaban/assets/images/sidebar-icon-faq.png' %}" alt="home-icon"/>
               </div>
               <span class="text-in-button"> FAQ </span>
             </span>
           </a>
+            </div>
         </div>
-      </div>
-      <!------------------------------------- Content-Container ------------------------------------------------>
-      <div class="content-container">
-        <!----------------------------------- Right sidebar ------------------------------------------------>
-        <div class="right-sidebar">
-          <div class="right-sidebar-header">
-            <a href="" class="button-in-sidebar">
-              <span class="icon-and-text-wrap">
-                <div class="icon-in-button">
-                  <img
-                    src="../assets/svg/country-flags/transparent.svg"
-                    class="country-flag"
-                  />
+
+        <!-- Content Container -->
+        <div class="content-container">
+            <!-- Right Sidebar -->
+            <div class="right-sidebar">
+                <div class="right-sidebar-header">
+                    <a href="#" class="button-in-sidebar">
+                        <span class="icon-and-text-wrap">
+                            <div class="icon-in-button">
+                                <img src="{% static 'zaban/assets/svg/country-flags/'|add:user.learn_lang|add:'-flag.svg' %}" class="country-flag" alt="{% if user.learn_lang == 'de' %}German{% elif user.learn_lang == 'ja' %}Japanese{% elif user.learn_lang == 'fr' %}French{% elif user.learn_lang == 'es' %}Spanish{% else %}Language{% endif %} Flag" />
+                            </div>
+                        </span>
+                    </a>
+                     <a href="#" class="button-in-sidebar">
+                        <span class="icon-and-text-wrap">
+                            <div class="icon-in-button">
+                                <img src="{% static 'zaban/assets/svg/lesson-xp.svg' %}" alt="XP Icon" class="profile" />
+                            </div>
+                            <span class="text-in-button fire-text">{{ user.xp }}</span>
+                        </span>
+                    </a>
+                    <a href="#" class="button-in-sidebar">
+                        <span class="icon-and-text-wrap">
+                            <div class="icon-in-button">
+                                <img src="{% static 'zaban/assets/svg/gems-icon.svg' %}" alt="Gems Icon" class="profile" />
+                            </div>
+                            <span class="text-in-button gem-text">{{ user.gems }}</span>
+                        </span>
+                    </a>
+                    <a href="#" class="button-in-sidebar">
+                        <span class="icon-and-text-wrap">
+                            <div class="icon-in-button">
+                                <img src="{% static 'zaban/assets/svg/heart-filled-red.svg' %}" alt="Hearts Icon" class="profile" />
+                            </div>
+                            <span class="text-in-button heart-text">{{ user.hearts }}</span>
+                        </span>
+                    </a>
                 </div>
-              </span>
-            </a>
-            <a href="" class="button-in-sidebar">
-              <span class="icon-and-text-wrap">
-                <div class="icon-in-button">
-                  <img
-                    src="../assets/svg/lesson-xp.svg"
-                    alt="home-icon"
-                    class="profile"
-                  />
-                </div>
-                <span class="text-in-button fire-text"> 0 </span>
-              </span>
-            </a>
-            <a href="" class="button-in-sidebar">
-              <span class="icon-and-text-wrap">
-                <div class="icon-in-button">
-                  <img
-                    src="../assets/svg/gems-icon.svg"
-                    alt="home-icon"
-                    class="profile"
-                  />
-                </div>
-                <span class="text-in-button gem-text"> 0 </span>
-              </span>
-            </a>
-            <a href="" class="button-in-sidebar">
-              <span class="icon-and-text-wrap">
-                <div class="icon-in-button">
-                  <img
-                    src="../assets/svg/heart-filled-red.svg"
-                    alt="home-icon"
-                    class="profile"
-                  />
-                </div>
-                <span class="text-in-button heart-text"> 0 </span>
-              </span>
-            </a>
-          </div>
-          <div class="try-super-box">
+                <div class="try-super-box">
             <img
-              src="../assets/svg/super-icon.svg"
+              src="{% static 'zaban/assets/svg/super-icon.svg' %}"
               alt="super-text"
               id="try-super-image-one"
             />
             <img
-              src="../assets/svg/super-duo-owl.svg"
+              src="{% static 'zaban/assets/svg/super-duo-owl.svg' %}"
               alt="super-duo-owl"
               id="try-super-image-two"
             />
@@ -134,7 +142,7 @@
               <div class="description">
                 No ads, personalized practice, and unlimited Legendary!
               </div>
-              <button id="try-super-button" onclick="openSuperDuolingoPage();">
+              <button id="try-super-button" onclick="openSuperDuolingoPage(event)">
                 Try 2 weeks free
               </button>
             </div>
@@ -142,11 +150,11 @@
           <div class="try-super-box">
             <div class="league-header-with-link">
               <h2>Nexus League</h2>
-              <h2><a href="./leaderboard.html">View League</a></h2>
+              <h2><a href="./leaderboard.html">View League</a></h2>  <!-- Replace with actual URL -->
             </div>
             <div class="league-header-with-link">
               <img
-                src="../assets/svg/amethyst-league-icon.svg"
+                src="{% static 'zaban/assets/svg/amethyst-league-icon.svg' %}"
                 alt="amethyst-league-icon"
               />
               <div class="league-text-container">
@@ -156,29 +164,492 @@
               </div>
             </div>
           </div>
+            </div>
+
+            <!-- Scrollable Lesson Area -->
+           <div class="scrollable-lesson-div active">
+    <!-- Section List (Initially Visible) -->
+    <div class="section-list">
+        <!-- Sections will be loaded here by JavaScript -->
+    </div>
+ <!-- Unit and Lesson Display (Initially Hidden) -->
+<div class="unit-placing-div" style="display: none;">
+    <div class="sticky">
+        <div class="right-sidebar-header top-stats-mobile">
+            <!-- Top stats (mobile) - Duplicated from right sidebar for mobile view -->
+            <a href="#" class="button-in-sidebar">
+                <span class="icon-and-text-wrap">
+                    <div class="icon-in-button">
+                        <img src="{% static 'zaban/assets/svg/country-flags/'|add:user.learn_lang|add:'-flag.svg' %}" class="country-flag" alt="{% if user.learn_lang == 'de' %}German{% elif user.learn_lang == 'ja' %}Japanese{% elif user.learn_lang == 'fr' %}French{% elif user.learn_lang == 'es' %}Spanish{% else %}Language{% endif %} Flag" />
+                    </div>
+                </span>
+            </a>
+            <a href="#" class="button-in-sidebar">
+                <span class="icon-and-text-wrap">
+                    <div class="icon-in-button">
+                        <img src="{% static 'zaban/assets/svg/lesson-xp.svg' %}" alt="XP Icon" class="profile" />
+                    </div>
+                    <span class="text-in-button fire-text">{{ user.xp }}</span>
+                </span>
+            </a>
+            <a href="#" class="button-in-sidebar">
+                <span class="icon-and-text-wrap">
+                    <div class="icon-in-button">
+                        <img src="{% static 'zaban/assets/svg/gems-icon.svg' %}" alt="Gems Icon" class="profile" />
+                    </div>
+                    <span class="text-in-button gem-text">{{ user.gems }}</span>
+                </span>
+            </a>
+            <a href="#" class="button-in-sidebar">
+                <span class="icon-and-text-wrap">
+                    <div class="icon-in-button">
+                        <img src="{% static 'zaban/assets/svg/heart-filled-red.svg' %}" alt="Hearts Icon" class="profile" />
+                    </div>
+                    <span class="text-in-button heart-text">{{ user.hearts }}</span>
+                </span>
+            </a>
         </div>
-        <!----------------------------------- Scrollable area showing units ------------------------------------------------>
-        <div
-          class="scrollable-lesson-div active"
-          onclick="closeAllOpenDialogBoxes()"
-        ></div>
-      </div>
+        <div class="section-name-header">
+            <div class="arrow" onclick="showSectionList()">
+                <img alt="" src="{% static 'zaban/assets/svg/back-button-white.svg' %}" />
+                <img alt="" src="{% static 'zaban/assets/svg/up-arrow-section.svg' %}" />
+            </div>
+            <h2 class="_1Msxm">Section&nbsp;<span class="current-section-number"></span>:&nbsp;<span class="current-section-name"></span></h2>
+        </div>
     </div>
-    <div class="loading-screen hidden">
-      <div class="text-animation-container">
-        <div class="lesson-loading-svg" id="owl-walk-animation"></div>
-        <span
-          >Did You Know : Spanish is the second most spoken language globally,
-          with over 460 million native speakers.</span
-        >
-      </div>
+
+    <!-- Units will be dynamically added here -->
+</div>
+</div>
+</div>
+</div>
+
+    <!-- Loading Screen (Initially Hidden) -->
+   <div class="loading-screen hidden">
+        <div class="text-animation-container">
+            <!-- Placeholder for animation - you'll need to handle this with JS/Lottie -->
+            <div class="lesson-loading-svg" id="owl-walk-animation"></div>
+             <p>Did You Know: Spanish is the second most spoken language globally, with over 460 million native speakers.</p>
+        </div>
     </div>
-    <script
-      src="https://cdn.jsdelivr.net/npm/js-circle-progress/dist/circle-progress.min.js"
-      type="module"
-    ></script>
-  </body>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.7/lottie.min.js"></script>
-  <script src="../js/learn.js"></script>
-  <script src="../js/updateUserData.js" type="module"></script>
+    <div class="sidebar-buttons bottom-nav">
+<a href="#" class="button-in-sidebar"> <!--Replace #-->
+  <span class="icon-and-text-wrap selected">
+    <div class="icon-in-button">
+      <img src="{% static 'zaban/assets/svg/home-in-sidebar.svg' %}" alt="home-icon" />
+    </div>
+
+  </span>
+</a>
+<a href="#" class="button-in-sidebar"> <!--Replace #-->
+  <span class="icon-and-text-wrap">
+    <div class="icon-in-button">
+      <img src="{% static 'zaban/assets/svg/badge-in-sidebar.svg' %}" alt="home-icon" />
+    </div>
+
+  </span>
+</a>
+<a href="profile-page.html" class="button-in-sidebar">  <!-- Replace with actual URL -->
+  <span class="icon-and-text-wrap">
+    <div class="icon-in-button">
+      <img
+        id="profile-image"
+        src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}{% static 'zaban/assets/svg/profile-image-temp.svg' %}{% endif %}"
+        alt="home-icon"
+        class="profile"
+      />
+    </div>
+
+  </span>
+</a>
+<a href="./shoppingpage.html" class="button-in-sidebar">  <!-- Replace with actual URL -->
+<span class="icon-and-text-wrap">
+  <div class="icon-in-button">
+    <img src="{% static 'zaban/assets/svg/shop-in-sidebar.svg' %}" alt="home-icon" />
+  </div>
+</span>
+</a>
+<a href="./faq.html" class="button-in-sidebar">  <!-- Replace with actual URL -->
+  <span class="icon-and-text-wrap">
+    <div class="icon-in-button">
+      <img src="{% static 'zaban/assets/images/sidebar-icon-faq.png' %}" alt="home-icon" />
+    </div>
+
+  </span>
+</a>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/js-circle-progress/dist/circle-progress.min.js" type="module"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.7/lottie.min.js"></script>
+    <script>
+   // Function to show the section list and hide units
+const showSectionList = () => {
+  document.querySelector('.section-list').style.display = 'block';
+  document.querySelector('.unit-placing-div').style.display = 'none';
+};
+
+// Function to show lessons in a specific section
+const showLessonsInSection = (sectionNumber) => {
+  fetch("{% url 'get_section_data' %}")
+    .then(response => response.json())
+    .then(data => {
+      const sectionData = data.sections;
+      const user = {{ user|safe }};
+      const currentSection = sectionData.find(section => section.id === sectionNumber); // Use section.id
+
+      if (!currentSection) {
+        console.error("Section not found:", sectionNumber);
+        return; // Exit if section not found
+      }
+
+
+      // Update section header
+      document.querySelector('.current-section-number').textContent = sectionNumber;
+      document.querySelector('.current-section-name').textContent = currentSection.name;
+
+      // Clear previous units
+      const unitContainer = document.querySelector('.unit-placing-div');
+      unitContainer.innerHTML = `
+        <div class="sticky">
+          <div class="right-sidebar-header top-stats-mobile">
+            <!-- Top stats (mobile) -->
+            <a href="#" class="button-in-sidebar">
+              <span class="icon-and-text-wrap">
+                <div class="icon-in-button">
+                  <img src="{% static 'zaban/assets/svg/country-flags/'|add:user.learn_lang|add:'-flag.svg' %}" class="country-flag" alt="{% if user.learn_lang == 'de' %}German{% elif user.learn_lang == 'ja' %}Japanese{% elif user.learn_lang == 'fr' %}French{% elif user.learn_lang == 'es' %}Spanish{% else %}Language{% endif %} Flag" />
+                </div>
+              </span>
+            </a>
+            <a href="#" class="button-in-sidebar">
+              <span class="icon-and-text-wrap">
+                <div class="icon-in-button">
+                  <img src="{% static 'zaban/assets/svg/lesson-xp.svg' %}" alt="XP Icon" class="profile" />
+                </div>
+                <span class="text-in-button fire-text">{{ user.xp }}</span>
+              </span>
+            </a>
+            <a href="#" class="button-in-sidebar">
+              <span class="icon-and-text-wrap">
+                <div class="icon-in-button">
+                  <img src="{% static 'zaban/assets/svg/gems-icon.svg' %}" alt="Gems Icon" class="profile" />
+                </div>
+                <span class="text-in-button gem-text">{{ user.gems }}</span>
+              </span>
+            </a>
+            <a href="#" class="button-in-sidebar">
+              <span class="icon-and-text-wrap">
+                <div class="icon-in-button">
+                  <img src="{% static 'zaban/assets/svg/heart-filled-red.svg' %}" alt="Hearts Icon" class="profile" />
+                </div>
+                <span class="text-in-button heart-text">{{ user.hearts }}</span>
+              </span>
+            </a>
+          </div>
+          <div class="section-name-header">
+            <div class="arrow" onclick="showSectionList()">
+              <img alt="" src="{% static 'zaban/assets/svg/back-button-white.svg' %}" />
+              <img alt="" src="{% static 'zaban/assets/svg/up-arrow-section.svg' %}" />
+            </div>
+            <h2 class="_1Msxm">Section&nbsp;<span class="current-section-number"></span>:&nbsp;<span class="current-section-name"></span></h2>
+          </div>
+        </div>
+      `;
+      document.querySelector('.current-section-number').textContent = sectionNumber;
+      document.querySelector('.current-section-name').textContent = currentSection.name;
+
+      // Add units and lessons
+      currentSection.units.forEach((unit, unitIndex) => {
+        const unitElement = document.createElement('section');
+        unitElement.id = `section-${unitIndex + 1}`;
+        unitElement.classList.add('unit');
+
+        const unitHeaderClass = unitIndex < user.completed_units ? 'unit-colorful' : 'unit-unfinished';
+
+        unitElement.innerHTML = `
+          <header class="unit ${unitHeaderClass}">
+            <h1 class="unit-number">Unit ${unit.unit_number}</h1>
+            <span class="unit-description">${unit.description}</span>
+          </header>
+        `;
+
+        const completedChapters = unitIndex < user.completed_units ? unit.chapters.length : (unitIndex === user.completed_units ? user.completed_chapters : 0);
+        const onProgress = unitIndex === user.completed_units && user.current_lesson > 0 && completedChapters < unit.chapters.length;
+        const lockedLessons = unit.chapters.length - completedChapters - (onProgress ? 1 : 0);
+
+        const createLessonElement = (type, chapterName, lessonNumber) => {
+          const alignmentDiv = document.createElement('div');
+          alignmentDiv.classList.add('alignment-div');
+          alignmentDiv.style.padding = calculatePadding();
+
+          let lessonHTML = '';
+          if (type === 'completed') {
+            lessonHTML = `
+              <div class="circle_box completed">
+                <button class="lesson-button inactive" onclick="openDialogBoxes(event, this);">
+                  <img src="{% static 'zaban/assets/svg/completed-lesson-background.svg' %}" class="star-image bg" />
+                  <img src="{% static 'zaban/assets/svg/correct-tick-unit-completed.svg' %}" class="star-image" />
+                </button>
+              </div>
+              <div class="floating-start-box-bottom hidden completed">
+                <div class="triangle-top"></div>
+                <div class="text-container">
+                  <h1>${chapterName}</h1>
+                  <p>You completed this level!</p>
+                  <button>Completed</button>
+                </div>
+              </div>
+            `;
+          } else if (type === 'onProgress') {
+            lessonHTML = `
+              <div class="circle_box">
+                <button class="lesson-button" onclick="openDialogBoxes(event, this);">
+                  <img src="{% static 'zaban/assets/svg/star-in-lesson-white.svg' %}" class="star-image">
+                  <circle-progress value="${(user.current_lesson - 1) * 25}" max="100" text-format="none"></circle-progress>
+                </button>
+                <div class="floating-start-box">
+                  <div class="text">START</div>
+                  <div class="triangle"></div>
+                </div>
+              </div>
+              <div class="floating-start-box-bottom hidden">
+                <div class="triangle-top"></div>
+                <div class="text-container">
+                  <h1>${chapterName}</h1>
+                  <p>Lesson ${user.current_lesson} of 4</p>
+                  <button onclick="startLesson(event)">Start +10 XP</button>
+                </div>
+              </div>
+            `;
+          } else if (type === 'locked') {
+            lessonHTML = `
+              <div class="circle_box locked">
+                <button class="lesson-button inactive" onclick="openDialogBoxes(event, this);">
+                  <img src="{% static 'zaban/assets/svg/locked-button-grey.svg' %}" class="star-image">
+                </button>
+              </div>
+              <div class="floating-start-box-bottom hidden locked">
+                <div class="triangle-top"></div>
+                <div class="text-container">
+                  <h1>${chapterName}</h1>
+                  <p>Complete all the levels above to unlock this</p>
+                  <button>Locked</button>
+                </div>
+              </div>
+            `;
+          }
+
+          alignmentDiv.innerHTML = lessonHTML;
+          const box = alignmentDiv.querySelector(".floating-start-box-bottom");
+          if (box) {
+            box.style.translate = `calc(-50% + ${calculateTranslate()})`;
+          }
+          return alignmentDiv;
+        };
+
+        for (let i = 0; i < completedChapters; i++) {
+          unitElement.appendChild(createLessonElement('completed', unit.chapters[i], i + 1));
+        }
+        if (onProgress) {
+          unitElement.appendChild(createLessonElement('onProgress', unit.chapters[completedChapters], user.current_lesson));
+        }
+        for (let i = 0; i < lockedLessons; i++) {
+          unitElement.appendChild(createLessonElement('locked', unit.chapters[completedChapters + (onProgress ? 1 : 0) + i]));
+        }
+
+        if (unitIndex < user.completed_units || (unitIndex === user.completed_units && completedChapters > 1)) {
+          const animationPath1 = unitIndex % 2 === 0
+            ? "{% static 'zaban/assets/json-animations/duo-unit-one-one.json' %}"
+            : "{% static 'zaban/assets/json-animations/duo-unit-two-one.json' %}";
+          const firstanimatedSpriteInLesson = document.createElement("div");
+          firstanimatedSpriteInLesson.classList.add("animated-sprite-in-lesson-1");
+          animationFromJSON(firstanimatedSpriteInLesson, animationPath1);
+          unitElement.append(firstanimatedSpriteInLesson);
+        } else {
+          const firstanimatedSpriteInLesson = document.createElement("div");
+          firstanimatedSpriteInLesson.classList.add("animated-sprite-in-lesson-1", "greyd-sprite");
+          const animationPath1 = unitIndex % 2 === 0
+            ? "{% static 'zaban/assets/json-animations/duo-unit-one-one.json' %}"
+            : "{% static 'zaban/assets/json-animations/duo-unit-two-one.json' %}";
+          animationFromJSON(firstanimatedSpriteInLesson, animationPath1, false);
+          unitElement.append(firstanimatedSpriteInLesson);
+        }
+
+        if (unitIndex < user.completed_units || (unitIndex === user.completed_units && completedChapters > 6)) {
+          const animationPath2 = unitIndex % 2 === 0
+            ? "{% static 'zaban/assets/json-animations/duo-unit-one-two.json' %}"
+            : "{% static 'zaban/assets/json-animations/duo-unit-two-two.json' %}";
+          const secondanimatedSpriteInLesson = document.createElement("div");
+          secondanimatedSpriteInLesson.classList.add("animated-sprite-in-lesson-2");
+          animationFromJSON(secondanimatedSpriteInLesson, animationPath2);
+          unitElement.append(secondanimatedSpriteInLesson);
+        } else{
+          const animationPath2 = unitIndex % 2 === 0
+            ? "{% static 'zaban/assets/json-animations/duo-unit-one-two.json' %}"
+            : "{% static 'zaban/assets/json-animations/duo-unit-two-two.json' %}";
+          const secondanimatedSpriteInLesson = document.createElement("div");
+          secondanimatedSpriteInLesson.classList.add("animated-sprite-in-lesson-2", "greyd-sprite");
+          animationFromJSON(secondanimatedSpriteInLesson, animationPath2, false);
+          unitElement.append(secondanimatedSpriteInLesson);
+        }
+
+
+        unitContainer.appendChild(unitElement);
+      });
+
+      // Hide section list and show units
+      document.querySelector('.section-list').style.display = 'none';
+      document.querySelector('.unit-placing-div').style.display = 'block';
+    })
+    .catch(error => {
+      console.error('Error fetching section data:', error);
+      // Optionally display an error message to the user
+    });
+};
+
+
+    // Initial display: show section list
+
+    const initialLoad = () => {
+      fetch("{% url 'get_section_data' %}")
+        .then(response => response.json())
+        .then(data => {
+          const sectionData = data.sections;
+          const sectionListContainer = document.querySelector('.section-list');
+          sectionListContainer.innerHTML = ''; // Clear existing content
+
+          sectionData.forEach((section, index) => {
+            const sectionElement = document.createElement('div');
+            sectionElement.classList.add('section-container');
+            if (index > 0) {
+              sectionElement.classList.add('locked-section');
+            }
+
+            sectionElement.innerHTML = `
+                <div class="middle-dev">
+                    <h1 class="section-name">Section ${index + 1}: ${section.name}</h1>
+                    <div class="status-badge">
+                        ${index === 0 ? `
+                            <img src="https://d35aaqx5ub95lt.cloudfront.net/images/pathSections/ee32b843ba0258510aa3d7d4a887cfa8.svg" alt="On Progress" />
+                            <p>On Progress!</p>`
+                          : `
+                            <img src="{% static 'zaban/assets/svg/locked-button-grey.svg' %}" alt="Locked" />
+                            <p>Locked</p>`
+                        }
+                    </div>
+                    <div class="_2n0sJ">
+                        <button class="section-button ${index === 0 ? 'active-section-button' : ''}"
+                                onclick="showLessonsInSection(${section.id})">
+                            <span class="_1fHYG">${index === 0 ? 'Continue' : 'Locked'}</span>
+                        </button>
+                    </div>
+                </div>
+                <img class="section-banner-image" src="" alt="${section.name} Banner" />
+
+            `;
+            sectionListContainer.appendChild(sectionElement);
+          });
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+
+    // Call initialLoad on page load
+    document.addEventListener('DOMContentLoaded', initialLoad);
+
+    // Helper Functions (These were in your original JS)
+    const getLanguageFullForm = (languageCode) => {
+        switch (languageCode) {
+            case 'de': return "German";
+            case 'ja': return "Japanese";
+            case 'fr': return "French";
+            case 'es': return "Spanish";
+            default: return "Languages";
+        }
+    };
+
+    // const getLanguageFlagPath = (languageCode) =>
+    //     getStatic(`assets/svg/country-flags/${languageCode}-flag.svg`);
+
+
+    const closeOtherOpenDialogBoxes = (event) => {
+      event.stopPropagation();
+      let currentButton = event.target.closest(".alignment-div")?.querySelector(".floating-start-box-bottom")
+      document.querySelectorAll(".floating-start-box-bottom").forEach((dialog) => {
+        if (dialog != currentButton) { dialog.classList.add("hidden") }
+      });
+    }
+
+    const closeAllOpenDialogBoxes = () => {
+      document.querySelectorAll(".floating-start-box-bottom").forEach((dialog) => {
+        dialog.classList.add("hidden")
+      });
+    }
+    const openDialogBoxes = (event, button) => {
+        // Prevent event bubbling to avoid closing immediately
+        event.stopPropagation();
+
+        // Close other open dialog boxes
+        document.querySelectorAll(".floating-start-box-bottom").forEach(dialog => {
+            if (dialog !== button.closest('.alignment-div').querySelector('.floating-start-box-bottom')) {
+                dialog.classList.add('hidden');
+            }
+        });
+
+        // Toggle the current dialog box
+         const parentDiv = button.closest('.alignment-div');
+        parentDiv.querySelector('.floating-start-box-bottom').classList.toggle('hidden');
+    };
+
+    const startLesson = (event) => {
+        event.preventDefault();
+        document.querySelector(".loading-screen").classList.remove("hidden"); // Show loading screen
+        document.body.style.overflow = "hidden"; // Prevent scrolling
+        setTimeout(() => {
+            window.location.href = "{% url 'questionarie' %}"; // Redirect to the questionarie
+        }, 2500); // Simulate loading time
+    };
+
+    const openSuperDuolingoPage = (event) => {
+        event.preventDefault();
+        const button = document.getElementById("try-super-button");
+        button.classList.toggle('clicked');
+        setTimeout(() => {
+            button.classList.toggle('clicked');
+            window.location.href = "{% url 'superduolingo' %}"; // Use Django's URL template tag
+        }, 300);
+    }
+
+    // --- Animation and Padding Logic (Adapted from your original JS) ---
+    let paddingArr = [0, 3, 5, 3, 0, -3, -5, -3, 0];
+    let translateIndex = 0;
+    let paddingIndex = 0;
+
+    const calculatePadding = () => {
+        if (paddingArr[paddingIndex] < 0) {
+            return `0 0 0 ${-60 * paddingArr[paddingIndex++]}px`;
+        }
+        return `0 ${60 * paddingArr[paddingIndex++]}px 0 0`;
+    };
+
+    const calculateTranslate = () => {
+        return `${-30 * paddingArr[translateIndex++]}px`;
+    };
+
+    // Animation function (using Lottie/Bodymovin)
+    const animationFromJSON = (ref, path, autoplay = true) => {
+      const animation = bodymovin.loadAnimation({
+        container: ref,
+        renderer: 'svg',
+        loop: true,
+        autoplay: autoplay,
+        path: path
+      });
+    };
+
+    // Initialize loading animation
+    let loadingPage = document.getElementById('owl-walk-animation');
+    const animationPath = "{% static 'zaban/assets/json-animations/duo-walking.json' %}";
+    animationFromJSON(loadingPage, animationPath);
+
+    </script>
+</body>
 </html>

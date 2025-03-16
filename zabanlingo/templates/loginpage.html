@@ -1,18 +1,13 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
   <head>
-    <script>
-      // تعیین متغیرهای全局 برای URLها
-      const SIGNUP_URL = "{% url 'signup' %}";
-  </script>
-  <script src="{% static 'zaban/js/loginpage.js' %}"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Duolingo-Login</title>
     <link rel="icon" href="{% static 'zaban/assets/images/favicon.ico' %}" />
     <link rel="stylesheet" href="{% static 'zaban/css/loginpage.css' %}" />
-    <link rel="stylesheet" href="{% static 'zaban/css/signup.css' %}">
+    <link rel="stylesheet" href="{% static 'zaban/css/signup.css' %}" />
     <link rel="stylesheet" href="{% static 'zaban/css/main.css' %}" />
     <script src="{% static 'zaban/js/loginpage.js' %}"></script>
     <script type="module" src="{% static 'zaban/js/firebaseLogin.js' %}"></script>
@@ -22,8 +17,8 @@
     <div class="main-container">
       <div class="signup-page-container">
         <div class="close-button-div">
-          <a href="{% url 'index' %}">  <!-- فرض بر اینکه نام URL صفحه اصلی index باشد -->
-            <img src="{% static 'zaban/assets/svg/close-button.svg' %}" alt="close button"/>
+          <a href="{% url 'index' %}">
+            <img src="{% static 'zaban/assets/svg/close-button.svg' %}" alt="close button" />
           </a>
         </div>
         <div class="login-button-container">
@@ -36,34 +31,34 @@
           </button>
         </div>
         
-        <form class="signup-section-main" id="main-form" method="POST">
-          {% csrf_token %}
+        <form class="signup-section-main" id="main-form">
+            {% csrf_token %}
           <div class="signup-information-div">
             <h1 class="create-profile-heading">Log in</h1>
-            
-            <!-- نمایش پیغام‌های خطا -->
-            {% if messages %}
-            <div class="alert alert-danger">
-              {% for message in messages %}
-                <div>{{ message }}</div>
-              {% endfor %}
-            </div>
-            {% endif %}
-
             <div class="input-fields-div">
               <div class="field-one">
-                {{ form.username }}
-                <div class="error-message" id="email-error-message">
-                  {{ form.username.errors }}
-                </div>
+                <input
+                  class="input-field"
+                  id="email-input"
+                  type="text"
+                  placeholder="Email"
+                />
+                <div class="error-message" id="email-error-message"></div>
               </div>
 
               <div class="field-one password-div">
-                {{ form.password }}
-                <a class="forgot" href="">Forgot?</a>
-                <div class="error-message" id="password-error-message">
-                  {{ form.password.errors }}
-                </div>
+                <input
+                  class="input-field password-input"
+                  id="password-input"
+                  type="password"
+                  placeholder="Password"
+                />
+                <a
+                    class="forgot"
+                    id="forgot-password"
+                    >Forgot?</a
+                  >
+                <div class="error-message" id="password-error-message"></div>
               </div>
             </div>
 

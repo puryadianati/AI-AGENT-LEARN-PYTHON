@@ -1,7 +1,9 @@
+const getStatic = (path) => `${STATIC_URL}${path}`;
+
 const openSuperDuolingoPage = () => {
   document.getElementById("try-super-button").classList.toggle('clicked');
   setTimeout(() => document.getElementById("try-super-button").classList.toggle('clicked'), 200)
-  location.href = "../html/superduolingo.html"
+  location.href = "{% url 'superduolingo' %}" // Replace with your Django URL name
 }
 
 const getLanguageFullForm = (languageCode) => {
@@ -13,9 +15,10 @@ const getLanguageFullForm = (languageCode) => {
     default: "Languages"
   }
 }
-const getLanguageFlagPath = (languageCode) => {
-  return `../assets/svg/country-flags/${languageCode}-flag.svg`
-}
+
+const getLanguageFlagPath = (languageCode) => 
+  getStatic(`assets/svg/country-flags/${languageCode}-flag.svg`);
+
 const closeOtherOpenDialogBoxes = (event) => {
   event.stopPropagation();
   let currentButton = event.target.closest(".alignment-div").querySelector(".floating-start-box-bottom")
@@ -32,7 +35,7 @@ const closeAllOpenDialogBoxes = () => {
 
 const scrollToCurrentLesson = () => {
   const targetDivs = document.querySelectorAll(".circle_box.completed");
-  const targetDiv= targetDivs[targetDivs.length-3];
+  const targetDiv = targetDivs[targetDivs.length - 3];
   console.log(targetDiv);
   targetDiv.scrollIntoView();
 }
@@ -45,6 +48,7 @@ const openDialogBoxes = (event) => {
   setTimeout(() => parentDiv.querySelector(".lesson-button").classList.toggle('clicked'), 150)
   parentDiv.querySelector(".floating-start-box")?.classList.toggle("hidden");
 }
+
 let sectionData;
 async function fetchSectionData(lang, sectionId) {
   try {
@@ -52,12 +56,12 @@ async function fetchSectionData(lang, sectionId) {
     sectionData = await response.json();
     localStorage.setItem("sectionData", JSON.stringify(sectionData));
     showLessonsInSection();
-
   } catch (error) {
     console.error('Error fetching data:', error);
     return;
   }
 }
+
 // This should be replaced with value from local storage ========================
 fetchSectionData("es", 1);
 //======================End of JSON==============================
@@ -80,7 +84,7 @@ const placeSectionList = () => {
   </div>
   <img
     class="section-banner-image"
-    src="../assets/svg/section-images/rookie-section-banner.svg"
+    src="{% static 'assets/svg/section-images/rookie-section-banner.svg' %}"
   />
 </div>
 <div class="section-container locked-section">
@@ -88,7 +92,7 @@ const placeSectionList = () => {
     <h1 class="section-name">Section&nbsp;2:&nbsp;Explorer</h1>
     <div class="status-badge">
       <img
-        src="../assets/svg/locked-button-grey.svg"
+        src="{% static 'assets/svg/locked-button-grey.svg' %}"
       />
       <p >Locked</p>
     </div>
@@ -100,7 +104,7 @@ const placeSectionList = () => {
   </div>
   <img
     class="section-banner-image"
-    src="../assets/svg/section-images/explorer-section-banner.svg"
+    src="{% static 'assets/svg/section-images/explorer-section-banner.svg' %}"
   />
 </div>
 <div class="section-container locked-section">
@@ -108,7 +112,7 @@ const placeSectionList = () => {
     <h1 class="section-name">Section&nbsp;3:&nbsp;Champion</h1>
     <div class="status-badge">
       <img
-        src="../assets/svg/locked-button-grey.svg"
+        src="{% static 'assets/svg/locked-button-grey.svg' %}"
       />
       <p >Locked</p>
     </div>
@@ -120,7 +124,7 @@ const placeSectionList = () => {
   </div>
   <img
     class="section-banner-image"
-    src="../assets/svg/section-images/champion-section-banner.svg"
+    src="{% static 'assets/svg/section-images/champion-section-banner.svg' %}"
   />
 </div>`
   scrollableContainer = document.querySelector(".scrollable-lesson-div");
@@ -172,7 +176,7 @@ const placeUnitsandLessons = (sectionData, userData) => {
   let onProgressHtml = `
 <div class="circle_box">
   <button class="lesson-button" onclick="openDialogBoxes(event);">
-    <img src="../assets/svg/star-in-lesson-white.svg" class="star-image">
+    <img src="{% static 'assets/svg/star-in-lesson-white.svg' %}" class="star-image">
     <circle-progress value="0" max="100" text-format="none" ></circle-progress>
   </button>
   <div class="floating-start-box">
@@ -193,7 +197,7 @@ const placeUnitsandLessons = (sectionData, userData) => {
 
   let lockedDiv = `<div class="circle_box locked">
 <button class="lesson-button inactive" onclick="openDialogBoxes(event);">
-  <img src="../assets/svg/locked-button-grey.svg" class="star-image">
+  <img src="{% static 'assets/svg/locked-button-grey.svg' %}" class="star-image">
 </button>
 </div>
 <div class="floating-start-box-bottom hidden locked">
@@ -211,11 +215,11 @@ const placeUnitsandLessons = (sectionData, userData) => {
     onclick="openDialogBoxes(event);"
   >
     <img
-      src="../assets/svg/completed-lesson-background.svg"
+      src="{% static 'assets/svg/completed-lesson-background.svg' %}"
       class="star-image bg"
     />
     <img
-      src="../assets/svg/correct-tick-unit-completed.svg"
+      src="{% static 'assets/svg/correct-tick-unit-completed.svg' %}"
       class="star-image"
     />
   </button>
@@ -247,7 +251,7 @@ const placeUnitsandLessons = (sectionData, userData) => {
   <span class="icon-and-text-wrap">
     <div class="icon-in-button">
       <img
-        src="../assets/svg/lesson-xp.svg"
+        src="{% static 'assets/svg/lesson-xp.svg' %}"
         alt="home-icon"
         class="profile"
       />
@@ -259,7 +263,7 @@ const placeUnitsandLessons = (sectionData, userData) => {
   <span class="icon-and-text-wrap">
     <div class="icon-in-button">
       <img
-        src="../assets/svg/gems-icon.svg"
+        src="{% static 'assets/svg/gems-icon.svg' %}"
         alt="home-icon"
         class="profile"
       />
@@ -271,7 +275,7 @@ const placeUnitsandLessons = (sectionData, userData) => {
   <span class="icon-and-text-wrap">
     <div class="icon-in-button">
       <img
-        src="../assets/svg/heart-filled-red.svg"
+        src="{% static 'assets/svg/heart-filled-red.svg' %}"
         alt="home-icon"
         class="profile"
       />
@@ -282,9 +286,9 @@ const placeUnitsandLessons = (sectionData, userData) => {
 </div>
 <div class="section-name-header">
 <div class="arrow" onclick="placeSectionList();"
-  ><img alt="" src="../assets/svg/back-button-white.svg"
+  ><img alt="" src="{% static 'assets/svg/back-button-white.svg' %}"
 />
-<img alt="" src="../assets/svg/up-arrow-section.svg"
+<img alt="" src="{% static 'assets/svg/up-arrow-section.svg' %}"
 /></div>
 <h2 class="_1Msxm">Section&nbsp;1:&nbsp;Rookie</h2>
 </div>
@@ -297,7 +301,7 @@ const placeUnitsandLessons = (sectionData, userData) => {
 <a href="" class="button-in-sidebar">
   <span class="icon-and-text-wrap selected">
     <div class="icon-in-button">
-      <img src="../assets/svg/home-in-sidebar.svg" alt="home-icon" />
+      <img src="{% static 'assets/svg/home-in-sidebar.svg' %}" alt="home-icon" />
     </div>
 
   </span>
@@ -305,7 +309,7 @@ const placeUnitsandLessons = (sectionData, userData) => {
 <a href="leaderboard.html" class="button-in-sidebar">
   <span class="icon-and-text-wrap">
     <div class="icon-in-button">
-      <img src="../assets/svg/badge-in-sidebar.svg" alt="home-icon" />
+      <img src="{% static 'assets/svg/badge-in-sidebar.svg' %}" alt="home-icon" />
     </div>
 
   </span>
@@ -315,7 +319,7 @@ const placeUnitsandLessons = (sectionData, userData) => {
     <div class="icon-in-button">
       <img
         id="profile-image"
-        src="../assets/svg/profile-image-temp.svg"
+        src="{% static 'assets/svg/profile-image-temp.svg' %}"
         alt="home-icon"
         class="profile"
       />
@@ -326,14 +330,14 @@ const placeUnitsandLessons = (sectionData, userData) => {
 <a href="./shoppingpage.html" class="button-in-sidebar">
 <span class="icon-and-text-wrap">
   <div class="icon-in-button">
-    <img src="../assets/svg/shop-in-sidebar.svg" alt="home-icon" />
+    <img src="{% static 'assets/svg/shop-in-sidebar.svg' %}" alt="home-icon" />
   </div>
 </span>
 </a>
 <a href="./faq.html" class="button-in-sidebar">
   <span class="icon-and-text-wrap">
     <div class="icon-in-button">
-      <img src="../assets/images/sidebar-icon-faq.png" alt="home-icon" />
+      <img src="{% static 'assets/images/sidebar-icon-faq.png' %}" alt="home-icon" />
     </div>
 
   </span>
@@ -419,12 +423,12 @@ const placeUnitsandLessons = (sectionData, userData) => {
     firstanimatedSpriteInLesson.setAttribute("class", "animated-sprite-in-lesson-1")
     let animationPath, animationPath2;
     if (i % 2 == 0) {
-      animationPath = '../assets/json-animations/duo-unit-one-one.json';
-      animationPath2 = '../assets/json-animations/duo-unit-one-two.json';
-    } else {
-      animationPath = '../assets/json-animations/duo-unit-two-one.json';
-      animationPath2 = '../assets/json-animations/duo-unit-two-two.json';
-    }
+      animationPath = `${STATIC_URL}zaban/assets/json-animations/duo-unit-one-one.json`;
+      animationPath2 = `${STATIC_URL}zaban/assets/json-animations/duo-unit-one-two.json`;
+  } else {
+      animationPath = `${STATIC_URL}assets/json-animations/duo-unit-two-one.json`;
+      animationPath2 = `${STATIC_URL}assets/json-animations/duo-unit-two-two.json`;
+  }
 
     animationFromJSON(firstanimatedSpriteInLesson, animationPath)
     section.append(firstanimatedSpriteInLesson);
@@ -438,7 +442,7 @@ const placeUnitsandLessons = (sectionData, userData) => {
   }
 
   paddingIndex = 0;
-  translateIndex = 0
+  translateIndex = 0;
   let section = document.createElement("section");
   section.setAttribute("id", `section-${unitCounter++}`);
   section.innerHTML = incompleteUnitHeader;
@@ -451,8 +455,9 @@ const placeUnitsandLessons = (sectionData, userData) => {
 
   let movement = false
   let movement2 = false;
-  let animationPath = '../assets/json-animations/duo-unit-one-one.json';
-  let animationPath2 = '../assets/json-animations/duo-unit-one-two.json';
+  let animationPath = `${STATIC_URL}zaban/assets/json-animations/duo-unit-one-one.json`;
+  let animationPath2 = `${STATIC_URL}zaban/assets/json-animations/duo-unit-one-two.json`;
+
   if (completedChapters > 1) {
     firstanimatedSpriteInLesson.classList.remove("greyd-sprite");
     movement = true;
@@ -475,7 +480,7 @@ const placeUnitsandLessons = (sectionData, userData) => {
 
   for (let i = 0; i < lockedUnits; i++) {
     paddingIndex = 0;
-    translateIndex = 0
+    translateIndex = 0;
     let section = document.createElement("section");
     section.setAttribute("id", `section-${unitCounter++}`);
     section.innerHTML = incompleteUnitHeader;
@@ -487,12 +492,14 @@ const placeUnitsandLessons = (sectionData, userData) => {
     firstanimatedSpriteInLesson.classList.add("animated-sprite-in-lesson-1", "greyd-sprite")
     let animationPath, animationPath2;
     if (i % 2 == 0) {
-      animationPath = '../assets/json-animations/duo-unit-one-one.json';
-      animationPath2 = '../assets/json-animations/duo-unit-one-two.json';
+      animationPath = `${STATIC_URL}zaban/assets/json-animations/duo-unit-one-one.json`;
+      animationPath2 = `${STATIC_URL}zaban/assets/json-animations/duo-unit-one-two.json`;
     } else {
-      animationPath = '../assets/json-animations/duo-unit-two-one.json';
-      animationPath2 = '../assets/json-animations/duo-unit-two-two.json';
+      animationPath = `${STATIC_URL}zaban/assets/json-animations/duo-unit-two-one.json`;
+      animationPath2 = `${STATIC_URL}zaban/assets/json-animations/duo-unit-two-two.json`;
     }
+
+
 
     animationFromJSON(firstanimatedSpriteInLesson, animationPath, false)
     section.append(firstanimatedSpriteInLesson);
@@ -502,13 +509,12 @@ const placeUnitsandLessons = (sectionData, userData) => {
     animationFromJSON(secondanimatedSpriteInLesson, animationPath2, false)
     section.append(secondanimatedSpriteInLesson);
 
-
     lessonContainer.append(section);
   }
 
   scrollableContainer.insertAdjacentHTML("beforeend", bottomNavBar);
   placeuserStatistics();
-  
+
   updateStatistics();
   scrollToCurrentLesson();
 }
@@ -528,14 +534,12 @@ const startLesson = () => {
   document.querySelector(".loading-screen").classList.toggle("hidden");
   document.body.style.overflow = "hidden"
   setTimeout(() => {
-    window.location.href = "questionarie.html"
+    window.location.href = "{% url 'questionarie' %}" // Replace with your Django URL name
   }, 2500);
-
 }
+
 let loadingPage = document.getElementById('owl-walk-animation');
-let animationPath = '../assets/json-animations/duo-walking.json';
-
-
+const animationPath = STATIC_URL + 'zaban/assets/json-animations/duo-walking.json';
 
 const animationFromJSON = (ref, path, autoplay = true) => {
   let animationPath = path;
@@ -547,7 +551,6 @@ const animationFromJSON = (ref, path, autoplay = true) => {
     autoplay: autoplay,
     path: animationPath
   });
-
 }
 
 animationFromJSON(loadingPage, animationPath);

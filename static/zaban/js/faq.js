@@ -8,6 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+
 const expandToAnswers = (event) => {
     var _a;
     const target = event.target;
@@ -19,6 +20,7 @@ const expandToAnswers = (event) => {
         answerElement === null || answerElement === void 0 ? void 0 : answerElement.classList.toggle("hidden");
     }
 };
+
 function fetchDataAndShow() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -44,7 +46,7 @@ function fetchDataAndShow() {
                 <div class="item" onclick="expandToAnswers(event)">
                     <div class="flex">
                         ${question.question}
-                        <img src="../assets/svg/down-arrow-faq.svg" alt="down arrow" />
+                        <img src="{% static 'zaban/assets/svg/down-arrow-faq.svg' %}" alt="down arrow" />
                     </div>
                     <div class="answer hidden">
                         ${question.answer}
@@ -56,4 +58,5 @@ function fetchDataAndShow() {
         }
     });
 }
+
 fetchDataAndShow();

@@ -1,13 +1,14 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Duolingo leaderboard</title>
-    <link rel="icon" href="../assets/images/favicon.ico" />
-    <link rel="stylesheet" href="../css/learn.css" />
-    <link rel="stylesheet" href="../css/main.css" />
-    <link rel="stylesheet" href="../css/leaderboard.css" />
+    <link rel="icon" href="{% static 'zaban/assets/images/favicon.ico' %}" />
+    <link rel="stylesheet" href="{% static 'zaban/css/learn.css' %}" />
+    <link rel="stylesheet" href="{% static 'zaban/css/main.css' %}" />
+    <link rel="stylesheet" href="{% static 'zaban/css/leaderboard.css' %}" />
   </head>
   <body>
     <div class="main-container">
@@ -15,33 +16,33 @@
       <div class="sidebar">
         <div class="logo-container">
           <img
-            src="../assets/svg/duolingo-green-text-only.svg"
+            src="{% static 'zaban/assets/svg/duolingo-green-text-only.svg' %}"
             alt="dolingo-text"
           />
         </div>
         <div class="sidebar-buttons">
-          <a href="./learn.html" class="button-in-sidebar">
+          <a href="{% url 'learn' %}" class="button-in-sidebar">
             <span class="icon-and-text-wrap">
               <div class="icon-in-button">
-                <img src="../assets/svg/home-in-sidebar.svg" alt="home-icon" />
+                <img src="{% static 'zaban/assets/svg/home-in-sidebar.svg' %}" alt="home-icon" />
               </div>
               <span class="text-in-button"> Learn </span>
             </span>
           </a>
-          <a href="leaderboard.html" class="button-in-sidebar">
+          <a href="{% url 'leaderboard' %}" class="button-in-sidebar">
             <span class="icon-and-text-wrap selected">
               <div class="icon-in-button">
-                <img src="../assets/svg/badge-in-sidebar.svg" alt="home-icon" />
+                <img src="{% static 'zaban/assets/svg/badge-in-sidebar.svg' %}" alt="home-icon" />
               </div>
               <span class="text-in-button"> Leaderboard </span>
             </span>
           </a>
-          <a href="profile-page.html" class="button-in-sidebar">
+          <a href="{% url 'profile-page' %}" class="button-in-sidebar">
             <span class="icon-and-text-wrap">
               <div class="icon-in-button">
                 <img
                 id="profile-image"
-                  src="../assets/svg/profile-image-temp.svg"
+                  src="{% static 'zaban/assets/svg/profile-image-temp.svg' %}"
                   alt="home-icon"
                   class="profile"
                 />
@@ -49,18 +50,18 @@
               <span class="text-in-button"> Profile </span>
             </span>
           </a>
-          <a href="./shoppingpage.html" class="button-in-sidebar">
+          <a href="{% url 'shoppingpage' %}" class="button-in-sidebar">
             <span class="icon-and-text-wrap">
               <div class="icon-in-button">
-                <img src="../assets/svg/shop-in-sidebar.svg" alt="home-icon" />
+                <img src="{% static 'zaban/assets/svg/shop-in-sidebar.svg' %}" alt="home-icon" />
               </div>
               <span class="text-in-button"> Shop </span>
             </span>
           </a>
-          <a href="./faq.html" class="button-in-sidebar">
+          <a href="{% url 'faq' %}" class="button-in-sidebar">
             <span class="icon-and-text-wrap">
               <div class="icon-in-button">
-                <img src="../assets/images/sidebar-icon-faq.png" alt="home-icon" />
+                <img src="{% static 'zaban/assets/images/sidebar-icon-faq.png' %}" alt="home-icon" />
               </div>
               <span class="text-in-button"> FAQ </span>
             </span>
@@ -76,7 +77,7 @@
               <span class="icon-and-text-wrap">
                 <div class="icon-in-button">
                   <img
-                    src="../assets/svg/country-flags/transparent.svg"
+                    src="{% static 'zaban/assets/svg/country-flags/transparent.svg' %}"
                     class="country-flag"
                   />
                 </div>
@@ -86,7 +87,7 @@
               <span class="icon-and-text-wrap">
                 <div class="icon-in-button">
                   <img
-                    src="../assets/svg/lesson-xp.svg"
+                    src="{% static 'zaban/assets/svg/lesson-xp.svg' %}"
                     alt="home-icon"
                     class="profile"
                   />
@@ -98,7 +99,7 @@
               <span class="icon-and-text-wrap">
                 <div class="icon-in-button">
                   <img
-                    src="../assets/svg/gems-icon.svg"
+                    src="{% static 'zaban/assets/svg/gems-icon.svg' %}"
                     alt="home-icon"
                     class="profile"
                   />
@@ -110,7 +111,7 @@
               <span class="icon-and-text-wrap">
                 <div class="icon-in-button">
                   <img
-                    src="../assets/svg/heart-filled-red.svg"
+                    src="{% static 'zaban/assets/svg/heart-filled-red.svg' %}"
                     alt="home-icon"
                     class="profile"
                   />
@@ -128,7 +129,7 @@
             </div>
             <div class="divprofile">
               <div class="divforpic">
-                <img class="picture"  id="profilePicture"  src="../assets/svg/profile-image-temp.svg"" alt="">
+                <img class="picture"  id="profilePicture"  src="{% static 'zaban/assets/svg/profile-image-temp.svg' %}" alt="">
                 <div class="statuscontainer">
                   <img class="profilestatus" id="addImage" src="https://d35aaqx5ub95lt.cloudfront.net/images/leagues/a35f1db4398fd29e66f1abc33a0d11a2.svg">
                 </div>
@@ -152,7 +153,6 @@
                 <button >
                   <svg viewBox="0 264 82 66" data-test="flag-ja" class="" style="height: 30.5854px; width: 38px;">
                     <image height="3168" href="https://d35aaqx5ub95lt.cloudfront.net/vendor/87938207afff1598611ba626a8c4827c.svg" width="82" xlink:href="https://d35aaqx5ub95lt.cloudfront.net/vendor/87938207afff1598611ba626a8c4827c.svg">
-
                     </image></svg></button></div>
             </div> 
         </div>
@@ -196,28 +196,28 @@
     </div>
     
     <div class="sidebar-buttons bottom-nav">
-      <a href="learn.html" class="button-in-sidebar">
+      <a href="{% url 'learn' %}" class="button-in-sidebar">
         <span class="icon-and-text-wrap">
           <div class="icon-in-button">
-            <img src="../assets/svg/home-in-sidebar.svg" alt="home-icon" />
+            <img src="{% static 'zaban/assets/svg/home-in-sidebar.svg' %}" alt="home-icon" />
           </div>
       
         </span>
       </a>
-      <a href="leaderboard.html" class="button-in-sidebar">
+      <a href="{% url 'leaderboard' %}" class="button-in-sidebar">
         <span class="icon-and-text-wrap selected">
           <div class="icon-in-button">
-            <img src="../assets/svg/badge-in-sidebar.svg" alt="home-icon" />
+            <img src="{% static 'zaban/assets/svg/badge-in-sidebar.svg' %}" alt="home-icon" />
           </div>
       
         </span>
       </a>
-      <a href="profile-page.html" class="button-in-sidebar">
+      <a href="{% url 'profile-page' %}" class="button-in-sidebar">
         <span class="icon-and-text-wrap">
           <div class="icon-in-button">
             <img
               id="profile-image"
-              src="../assets/svg/profile-image-temp.svg"
+              src="{% static 'zaban/assets/svg/profile-image-temp.svg' %}"
               alt="home-icon"
               class="profile"
             />
@@ -225,23 +225,23 @@
       
         </span>
       </a>
-      <a href="./shoppingpage.html" class="button-in-sidebar">
+      <a href="{% url 'shoppingpage' %}" class="button-in-sidebar">
       <span class="icon-and-text-wrap">
         <div class="icon-in-button">
-          <img src="../assets/svg/shop-in-sidebar.svg" alt="home-icon" />
+          <img src="{% static 'zaban/assets/svg/shop-in-sidebar.svg' %}" alt="home-icon" />
         </div>
       </span>
       </a>
-      <a href="./faq.html" class="button-in-sidebar">
+      <a href="{% url 'faq' %}" class="button-in-sidebar">
         <span class="icon-and-text-wrap">
           <div class="icon-in-button">
-            <img src="../assets/images/sidebar-icon-faq.png" alt="home-icon" />
+            <img src="{% static 'zaban/assets/images/sidebar-icon-faq.png' %}" alt="home-icon" />
           </div>
       
         </span>
       </a>
     </div>      
-    <script type="module"  src="../js/leaderboard.js"></script>
+    <script type="module"  src="{% static 'zaban/js/leaderboard.js' %}"></script>
     
   </body>
 </html>
